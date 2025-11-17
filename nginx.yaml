@@ -1,0 +1,148 @@
+name: nginx
+version: "1.0.0"
+description: "Высокопроизводительный веб-сервер и обратный прокси-сервер"
+
+type: "system_utility"
+runtime_mode: "docker"
+
+repository:
+  source: "github"
+  owner: "nginxinc"
+  repo: "docker-nginx"
+  branch: "main"
+  manifest_path: "appspecs/applications/nginx.yaml"
+  scripts_path: "scripts"
+
+version_source:
+  type: github_tags
+  filter: "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+  sort: "semver"
+
+requirements:
+  min_memory: "128MB"
+  min_cpu: 1
+  min_disk: "500MB"
+  architectures:
+    - amd64
+    - arm64
+
+variables:
+  HTTP_PORT:
+    default: 80
+    type: integer
+    description: "HTTP порт"
+    required: true
+  
+  HTTPS_PORT:
+    default: 443
+    type: integer
+    description: "HTTPS порт"
+    required: false
+
+docker:
+  images:
+    runtime:
+      type: "image"
+      source: "nginx:{{version}}"
+      pull: true
+  
+  runtime:
+    image: "nginx:{{version}}"
+    container_name: "nginx"
+    restart: unless-stopped
+    
+    volumes:
+      - type: bind
+        source: "/etc/nginx"
+        target: "/etc/nginx"
+        description: "Конфигурация Nginx"
+        read_only: false
+      
+      - type: bind
+        source: "/var/www/html"
+        target: "/usr/share/nginx/html"
+        description: "Веб-контент"
+        read_only: false
+      
+      - type: bind
+        source: "/var/log/nginx"
+        target: "/var/log/nginx"
+        description: "Логи Nginx"
+        read_only: false
+    
+    ports:
+      - container_port: 80
+        host_port: "{{HTTP_PORT}}"
+        protocol: tcp
+        description: "HTTP порт"
+      
+      - container_port: 443
+        host_port: "{{HTTPS_PORT}}"
+        protocol: tcp
+        description: "HTTPS порт"
+    
+    networks:
+      - name: default
+        type: bridge
+    
+    labels:
+      app.name: "nginx"
+      app.version: "{{version}}"
+      app.description: "{{description}}"
+      app.type: "{{type}}"
+      app.runtime_mode: "docker"
+    
+    healthcheck:
+      type: http
+      path: "/"
+      port: 80
+      interval: 30
+      timeout: 5
+      retries: 3
+      start_period: 10
+
+volumes:
+  - name: config
+    path: "/etc/nginx"
+    description: "Директория для конфигурации Nginx"
+    required: true
+  
+  - name: html
+    path: "/var/www/html"
+    description: "Директория для веб-контента"
+    required: true
+  
+  - name: logs
+    path: "/var/log/nginx"
+    description: "Директория для логов Nginx"
+    required: false
+
+ports:
+  - container_port: 80
+    host_port: "{{HTTP_PORT}}"
+    protocol: tcp
+    description: "HTTP порт"
+  
+  - container_port: 443
+    host_port: "{{HTTPS_PORT}}"
+    protocol: tcp
+    description: "HTTPS порт"
+
+networks:
+  - name: default
+    type: bridge
+
+healthcheck:
+  type: http
+  path: "/"
+  port: 80
+  interval: 30
+  timeout: 5
+  retries: 3
+
+labels:
+  app.name: "nginx"
+  app.version: "{{version}}"
+  app.description: "{{description}}"
+  app.type: "{{type}}"
+

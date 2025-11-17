@@ -1,0 +1,116 @@
+name: redis
+version: "1.0.0"
+description: "In-memory структура данных, используемая как база данных, кэш и брокер сообщений"
+
+type: "system_utility"
+runtime_mode: "docker"
+
+repository:
+  source: "github"
+  owner: "docker-library"
+  repo: "redis"
+  branch: "main"
+  manifest_path: "appspecs/applications/redis.yaml"
+  scripts_path: "scripts"
+
+version_source:
+  type: github_tags
+  filter: "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+  sort: "semver"
+
+requirements:
+  min_memory: "256MB"
+  min_cpu: 1
+  min_disk: "1GB"
+  architectures:
+    - amd64
+    - arm64
+
+variables:
+  REDIS_PASSWORD:
+    default: ""
+    type: string
+    description: "Пароль для Redis"
+    required: false
+  
+  REDIS_PORT:
+    default: 6379
+    type: integer
+    description: "Порт Redis"
+    required: true
+
+docker:
+  images:
+    runtime:
+      type: "image"
+      source: "redis:{{version}}"
+      pull: true
+  
+  runtime:
+    image: "redis:{{version}}"
+    container_name: "redis"
+    restart: unless-stopped
+    
+    command: ["redis-server", "--requirepass", "{{REDIS_PASSWORD}}"]
+    
+    volumes:
+      - type: bind
+        source: "/data"
+        target: "/data"
+        description: "Данные Redis"
+        read_only: false
+    
+    ports:
+      - container_port: 6379
+        host_port: "{{REDIS_PORT}}"
+        protocol: tcp
+        description: "Порт Redis"
+    
+    networks:
+      - name: default
+        type: bridge
+    
+    labels:
+      app.name: "redis"
+      app.version: "{{version}}"
+      app.description: "{{description}}"
+      app.type: "{{type}}"
+      app.runtime_mode: "docker"
+    
+    healthcheck:
+      type: command
+      command: ["redis-cli", "ping"]
+      interval: 30
+      timeout: 5
+      retries: 5
+      start_period: 10
+
+volumes:
+  - name: data
+    path: "/data"
+    description: "Директория для данных Redis"
+    required: true
+
+ports:
+  - container_port: 6379
+    host_port: "{{REDIS_PORT}}"
+    protocol: tcp
+    description: "Порт Redis"
+
+networks:
+  - name: default
+    type: bridge
+
+healthcheck:
+  type: command
+  command: ["redis-cli", "ping"]
+  interval: 30
+  timeout: 5
+  retries: 5
+
+labels:
+  app.name: "redis"
+  app.version: "{{version}}"
+  app.description: "{{description}}"
+  app.type: "{{type}}"
+

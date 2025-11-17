@@ -1,0 +1,131 @@
+name: postgresql
+version: "1.0.0"
+description: "Мощная объектно-реляционная система управления базами данных"
+
+type: "system_utility"
+runtime_mode: "docker"
+
+repository:
+  source: "github"
+  owner: "docker-library"
+  repo: "postgres"
+  branch: "main"
+  manifest_path: "appspecs/applications/postgresql.yaml"
+  scripts_path: "scripts"
+
+version_source:
+  type: github_tags
+  filter: "^[0-9]+$"
+  sort: "semver"
+
+requirements:
+  min_memory: "512MB"
+  min_cpu: 1
+  min_disk: "2GB"
+  architectures:
+    - amd64
+    - arm64
+
+variables:
+  POSTGRES_PASSWORD:
+    default: ""
+    type: string
+    description: "Пароль пользователя postgres"
+    required: true
+  
+  POSTGRES_USER:
+    default: "postgres"
+    type: string
+    description: "Имя пользователя PostgreSQL"
+    required: false
+  
+  POSTGRES_DB:
+    default: "postgres"
+    type: string
+    description: "Имя базы данных по умолчанию"
+    required: false
+  
+  POSTGRES_PORT:
+    default: 5432
+    type: integer
+    description: "Порт PostgreSQL"
+    required: true
+
+docker:
+  images:
+    runtime:
+      type: "image"
+      source: "postgres:{{version}}"
+      pull: true
+  
+  runtime:
+    image: "postgres:{{version}}"
+    container_name: "postgresql"
+    restart: unless-stopped
+    
+    environment:
+      POSTGRES_PASSWORD: "{{POSTGRES_PASSWORD}}"
+      POSTGRES_USER: "{{POSTGRES_USER}}"
+      POSTGRES_DB: "{{POSTGRES_DB}}"
+    
+    volumes:
+      - type: bind
+        source: "/var/lib/postgresql/data"
+        target: "/var/lib/postgresql/data"
+        description: "Данные PostgreSQL"
+        read_only: false
+    
+    ports:
+      - container_port: 5432
+        host_port: "{{POSTGRES_PORT}}"
+        protocol: tcp
+        description: "Порт PostgreSQL"
+    
+    networks:
+      - name: default
+        type: bridge
+    
+    labels:
+      app.name: "postgresql"
+      app.version: "{{version}}"
+      app.description: "{{description}}"
+      app.type: "{{type}}"
+      app.runtime_mode: "docker"
+    
+    healthcheck:
+      type: command
+      command: ["pg_isready", "-U", "{{POSTGRES_USER}}"]
+      interval: 30
+      timeout: 5
+      retries: 5
+      start_period: 30
+
+volumes:
+  - name: data
+    path: "/var/lib/postgresql/data"
+    description: "Директория для данных PostgreSQL"
+    required: true
+
+ports:
+  - container_port: 5432
+    host_port: "{{POSTGRES_PORT}}"
+    protocol: tcp
+    description: "Порт PostgreSQL"
+
+networks:
+  - name: default
+    type: bridge
+
+healthcheck:
+  type: command
+  command: ["pg_isready", "-U", "postgres"]
+  interval: 30
+  timeout: 5
+  retries: 5
+
+labels:
+  app.name: "postgresql"
+  app.version: "{{version}}"
+  app.description: "{{description}}"
+  app.type: "{{type}}"
+

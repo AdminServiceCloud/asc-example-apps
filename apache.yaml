@@ -1,0 +1,148 @@
+name: apache
+version: "1.0.0"
+description: "Популярный веб-сервер с открытым исходным кодом"
+
+type: "system_utility"
+runtime_mode: "docker"
+
+repository:
+  source: "github"
+  owner: "docker-library"
+  repo: "httpd"
+  branch: "main"
+  manifest_path: "appspecs/applications/apache.yaml"
+  scripts_path: "scripts"
+
+version_source:
+  type: github_tags
+  filter: "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+  sort: "semver"
+
+requirements:
+  min_memory: "128MB"
+  min_cpu: 1
+  min_disk: "500MB"
+  architectures:
+    - amd64
+    - arm64
+
+variables:
+  HTTP_PORT:
+    default: 80
+    type: integer
+    description: "HTTP порт"
+    required: true
+  
+  HTTPS_PORT:
+    default: 443
+    type: integer
+    description: "HTTPS порт"
+    required: false
+
+docker:
+  images:
+    runtime:
+      type: "image"
+      source: "httpd:{{version}}"
+      pull: true
+  
+  runtime:
+    image: "httpd:{{version}}"
+    container_name: "apache"
+    restart: unless-stopped
+    
+    volumes:
+      - type: bind
+        source: "/usr/local/apache2/conf"
+        target: "/usr/local/apache2/conf"
+        description: "Конфигурация Apache"
+        read_only: false
+      
+      - type: bind
+        source: "/usr/local/apache2/htdocs"
+        target: "/usr/local/apache2/htdocs"
+        description: "Веб-контент"
+        read_only: false
+      
+      - type: bind
+        source: "/var/log/apache2"
+        target: "/usr/local/apache2/logs"
+        description: "Логи Apache"
+        read_only: false
+    
+    ports:
+      - container_port: 80
+        host_port: "{{HTTP_PORT}}"
+        protocol: tcp
+        description: "HTTP порт"
+      
+      - container_port: 443
+        host_port: "{{HTTPS_PORT}}"
+        protocol: tcp
+        description: "HTTPS порт"
+    
+    networks:
+      - name: default
+        type: bridge
+    
+    labels:
+      app.name: "apache"
+      app.version: "{{version}}"
+      app.description: "{{description}}"
+      app.type: "{{type}}"
+      app.runtime_mode: "docker"
+    
+    healthcheck:
+      type: http
+      path: "/"
+      port: 80
+      interval: 30
+      timeout: 5
+      retries: 3
+      start_period: 10
+
+volumes:
+  - name: config
+    path: "/usr/local/apache2/conf"
+    description: "Директория для конфигурации Apache"
+    required: true
+  
+  - name: htdocs
+    path: "/usr/local/apache2/htdocs"
+    description: "Директория для веб-контента"
+    required: true
+  
+  - name: logs
+    path: "/var/log/apache2"
+    description: "Директория для логов Apache"
+    required: false
+
+ports:
+  - container_port: 80
+    host_port: "{{HTTP_PORT}}"
+    protocol: tcp
+    description: "HTTP порт"
+  
+  - container_port: 443
+    host_port: "{{HTTPS_PORT}}"
+    protocol: tcp
+    description: "HTTPS порт"
+
+networks:
+  - name: default
+    type: bridge
+
+healthcheck:
+  type: http
+  path: "/"
+  port: 80
+  interval: 30
+  timeout: 5
+  retries: 3
+
+labels:
+  app.name: "apache"
+  app.version: "{{version}}"
+  app.description: "{{description}}"
+  app.type: "{{type}}"
+

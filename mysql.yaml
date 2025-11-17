@@ -1,0 +1,149 @@
+name: mysql
+version: "1.0.0"
+description: "Популярная реляционная система управления базами данных"
+
+type: "system_utility"
+runtime_mode: "docker"
+
+repository:
+  source: "github"
+  owner: "docker-library"
+  repo: "mysql"
+  branch: "main"
+  manifest_path: "appspecs/applications/mysql.yaml"
+  scripts_path: "scripts"
+
+version_source:
+  type: github_tags
+  filter: "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+  sort: "semver"
+
+requirements:
+  min_memory: "512MB"
+  min_cpu: 1
+  min_disk: "2GB"
+  architectures:
+    - amd64
+    - arm64
+
+variables:
+  MYSQL_ROOT_PASSWORD:
+    default: ""
+    type: string
+    description: "Пароль root пользователя MySQL"
+    required: true
+  
+  MYSQL_DATABASE:
+    default: "mydb"
+    type: string
+    description: "Имя базы данных по умолчанию"
+    required: false
+  
+  MYSQL_USER:
+    default: ""
+    type: string
+    description: "Имя пользователя MySQL"
+    required: false
+  
+  MYSQL_PASSWORD:
+    default: ""
+    type: string
+    description: "Пароль пользователя MySQL"
+    required: false
+  
+  MYSQL_PORT:
+    default: 3306
+    type: integer
+    description: "Порт MySQL"
+    required: true
+
+docker:
+  images:
+    runtime:
+      type: "image"
+      source: "mysql:{{version}}"
+      pull: true
+  
+  runtime:
+    image: "mysql:{{version}}"
+    container_name: "mysql"
+    restart: unless-stopped
+    
+    environment:
+      MYSQL_ROOT_PASSWORD: "{{MYSQL_ROOT_PASSWORD}}"
+      MYSQL_DATABASE: "{{MYSQL_DATABASE}}"
+      MYSQL_USER: "{{MYSQL_USER}}"
+      MYSQL_PASSWORD: "{{MYSQL_PASSWORD}}"
+    
+    volumes:
+      - type: bind
+        source: "/var/lib/mysql"
+        target: "/var/lib/mysql"
+        description: "Данные MySQL"
+        read_only: false
+      
+      - type: bind
+        source: "/etc/mysql/conf.d"
+        target: "/etc/mysql/conf.d"
+        description: "Конфигурация MySQL"
+        read_only: false
+    
+    ports:
+      - container_port: 3306
+        host_port: "{{MYSQL_PORT}}"
+        protocol: tcp
+        description: "Порт MySQL"
+    
+    networks:
+      - name: default
+        type: bridge
+    
+    labels:
+      app.name: "mysql"
+      app.version: "{{version}}"
+      app.description: "{{description}}"
+      app.type: "{{type}}"
+      app.runtime_mode: "docker"
+    
+    healthcheck:
+      type: command
+      command: ["mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p{{MYSQL_ROOT_PASSWORD}}"]
+      interval: 30
+      timeout: 10
+      retries: 5
+      start_period: 30
+
+volumes:
+  - name: data
+    path: "/var/lib/mysql"
+    description: "Директория для данных MySQL"
+    required: true
+  
+  - name: config
+    path: "/etc/mysql/conf.d"
+    description: "Директория для конфигурации MySQL"
+    required: false
+
+ports:
+  - container_port: 3306
+    host_port: "{{MYSQL_PORT}}"
+    protocol: tcp
+    description: "Порт MySQL"
+
+networks:
+  - name: default
+    type: bridge
+
+healthcheck:
+  type: command
+  command: ["mysqladmin", "ping", "-h", "localhost"]
+  interval: 30
+  timeout: 10
+  retries: 5
+
+labels:
+  app.name: "mysql"
+  app.version: "{{version}}"
+  app.description: "{{description}}"
+  app.type: "{{type}}"
+

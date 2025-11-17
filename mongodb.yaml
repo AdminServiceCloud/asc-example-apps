@@ -1,0 +1,131 @@
+name: mongodb
+version: "1.0.0"
+description: "NoSQL документо-ориентированная база данных"
+
+type: "system_utility"
+runtime_mode: "docker"
+
+repository:
+  source: "github"
+  owner: "docker-library"
+  repo: "mongo"
+  branch: "main"
+  manifest_path: "appspecs/applications/mongodb.yaml"
+  scripts_path: "scripts"
+
+version_source:
+  type: github_tags
+  filter: "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+  sort: "semver"
+
+requirements:
+  min_memory: "512MB"
+  min_cpu: 1
+  min_disk: "2GB"
+  architectures:
+    - amd64
+    - arm64
+
+variables:
+  MONGO_INITDB_ROOT_USERNAME:
+    default: "admin"
+    type: string
+    description: "Имя пользователя администратора MongoDB"
+    required: true
+  
+  MONGO_INITDB_ROOT_PASSWORD:
+    default: ""
+    type: string
+    description: "Пароль администратора MongoDB"
+    required: true
+  
+  MONGO_INITDB_DATABASE:
+    default: "admin"
+    type: string
+    description: "Имя базы данных по умолчанию"
+    required: false
+  
+  MONGO_PORT:
+    default: 27017
+    type: integer
+    description: "Порт MongoDB"
+    required: true
+
+docker:
+  images:
+    runtime:
+      type: "image"
+      source: "mongo:{{version}}"
+      pull: true
+  
+  runtime:
+    image: "mongo:{{version}}"
+    container_name: "mongodb"
+    restart: unless-stopped
+    
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "{{MONGO_INITDB_ROOT_USERNAME}}"
+      MONGO_INITDB_ROOT_PASSWORD: "{{MONGO_INITDB_ROOT_PASSWORD}}"
+      MONGO_INITDB_DATABASE: "{{MONGO_INITDB_DATABASE}}"
+    
+    volumes:
+      - type: bind
+        source: "/data/db"
+        target: "/data/db"
+        description: "Данные MongoDB"
+        read_only: false
+    
+    ports:
+      - container_port: 27017
+        host_port: "{{MONGO_PORT}}"
+        protocol: tcp
+        description: "Порт MongoDB"
+    
+    networks:
+      - name: default
+        type: bridge
+    
+    labels:
+      app.name: "mongodb"
+      app.version: "{{version}}"
+      app.description: "{{description}}"
+      app.type: "{{type}}"
+      app.runtime_mode: "docker"
+    
+    healthcheck:
+      type: command
+      command: ["mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30
+      timeout: 10
+      retries: 5
+      start_period: 30
+
+volumes:
+  - name: data
+    path: "/data/db"
+    description: "Директория для данных MongoDB"
+    required: true
+
+ports:
+  - container_port: 27017
+    host_port: "{{MONGO_PORT}}"
+    protocol: tcp
+    description: "Порт MongoDB"
+
+networks:
+  - name: default
+    type: bridge
+
+healthcheck:
+  type: command
+  command: ["mongosh", "--eval", "db.adminCommand('ping')"]
+  interval: 30
+  timeout: 10
+  retries: 5
+
+labels:
+  app.name: "mongodb"
+  app.version: "{{version}}"
+  app.description: "{{description}}"
+  app.type: "{{type}}"
+
