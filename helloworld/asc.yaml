@@ -1,0 +1,136 @@
+name: helloworld
+description: "Simple Hello World application for AdminServiceCloud Runtime"
+
+type: "application"
+runtime_mode: "docker"
+dependencies: []
+
+repository:
+  source: "github"
+  owner: "AdminServiceCloud"
+  repo: "AdminServiceCloud"
+  branch: "main"
+  clone: false
+  clone_depth: 1
+  manifest_path: "/helloworld/.asc/asc.yaml"
+  scripts_path: "/helloworld/.asc/scripts"
+
+requirements:
+  min_memory: "64MB"
+  min_disk: "100MB"
+  # min_cpu: 1
+  # architectures:
+  #   - amd64
+  #   - arm64
+
+environment: 
+  - key: "NAME"
+    type: string
+    description: "What is your name?"
+    required: true
+  - key: "PORT"
+    type: integer
+    description: "What is your port?"
+    required: true
+  - key: "EnumKey"
+    type: string
+    enum: ["value1", "value2", "value3"]
+    description: "What is your enum key?"
+    required: true
+
+ports:
+  - container_port: "{{PORT}}"
+    host_port: "{{PORT}}"
+    protocol: tcp
+    description: "Host port"
+    required: true
+
+native:
+  install:
+    pre_install:
+      - "apt-get update || true"
+      - "apt-get install -y golang-go || true"
+    
+    steps:
+      - type: execute
+        command: "cd /tmp && git clone --depth 1 --branch main https://github.com/AdminServiceCloud/AdminServiceCloud.git admin-service-cloud || true"
+        working_directory: "/tmp"
+      
+      - type: execute
+        command: "cd /tmp/admin-service-cloud/asc-example-apps/helloworld/src && go mod download"
+        working_directory: "/tmp/admin-service-cloud/asc-example-apps/helloworld/src"
+      
+      - type: execute
+        command: "cd /tmp/admin-service-cloud/asc-example-apps/helloworld/src && CGO_ENABLED=0 go build -o /usr/local/bin/helloworld main.go"
+        working_directory: "/tmp/admin-service-cloud/asc-example-apps/helloworld/src"
+      
+      - type: chmod
+        path: "/usr/local/bin/helloworld"
+        mode: "755"
+    
+    post_install:
+      - "rm -rf /tmp/admin-service-cloud || true"
+  
+  start:
+    command: "/usr/local/bin/helloworld"
+    working_directory: "/"
+  
+  stop:
+    command: "pkill -f helloworld || true"
+    timeout: 5
+  
+  update:
+    steps:
+      - type: execute
+        command: "cd /tmp && rm -rf admin-service-cloud && git clone --depth 1 --branch main https://github.com/AdminServiceCloud/AdminServiceCloud.git admin-service-cloud || true"
+        working_directory: "/tmp"
+      
+      - type: backup
+        source: "/usr/local/bin/helloworld"
+        destination: "/usr/local/bin/helloworld.backup"
+      
+      - type: execute
+        command: "cd /tmp/admin-service-cloud/asc-example-apps/helloworld/src && go mod download && CGO_ENABLED=0 go build -o /usr/local/bin/helloworld main.go"
+        working_directory: "/tmp/admin-service-cloud/asc-example-apps/helloworld/src"
+      
+      - type: chmod
+        path: "/usr/local/bin/helloworld"
+        mode: "755"
+  
+  uninstall:
+    steps:
+      - type: remove
+        path: "/usr/local/bin/helloworld"
+
+docker:
+  images:
+    runtime:
+      type: "dockerfile"
+      source: "Dockerfile"
+      context: "asc-example-apps/helloworld"
+      build_args: {}
+      tag: "helloworld:{{version}}"
+  
+  runtime:
+    image: "helloworld:{{version}}"
+    container_name: "helloworld"
+    restart: unless-stopped
+  
+    
+    ports: []
+    
+    networks:
+      - name: default
+        type: bridge
+    
+    labels:
+      app.name: "helloworld"
+      app.version: "{{version}}"
+      app.description: "{{description}}"
+      app.type: "{{type}}"
+      app.runtime_mode: "docker"
+    
+
+mounts:
+  - name: data
+    docker_path: "/var/lib/helloworld"
