@@ -29,6 +29,26 @@ asc app logs helloworld
 2. 🧪 Проверьте локально: `asc source add file://... && asc install <name>`.
 3. 🛍️ Опубликуйте: PR в [официальный реестр](../registry) или подключите свой GitHub-репозиторий прямо в платформе.
 
+## 🧩 Несколько приложений в одном репозитории (ascstack.yaml)
+
+Один репозиторий может содержать **несколько приложений** — для этого в корень кладётся манифест-стек `ascstack.yaml`, перечисляющий приложения и пути к их `asc.yaml`:
+
+```yaml
+name: my-stack
+version: 1.0.0
+apps:
+  - name: web
+    path: ./web        # каталог с asc.yaml
+  - name: worker
+    path: ./worker
+```
+
+- 📦 `asc install my-stack` — установка всего стека целиком;
+- 🎯 `asc install my-stack/web` — установка только одного приложения из стека;
+- 🔗 стек может объявлять общие `env` и порядок запуска приложений.
+
+Подробнее — в [📦 package-manager](../asc-daemon/docs/package-manager.md).
+
 ## 📚 Документация и Roadmap
 
 - [📦 Формат asc.yaml и реестров](../asc-daemon/docs/package-manager.md)
