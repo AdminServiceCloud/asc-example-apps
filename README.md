@@ -1,58 +1,60 @@
-# 🧪 asc-example-apps — примеры приложений для AdminService.Cloud
+# 🧪 asc-example-apps — example applications for AdminService.Cloud
 
-Примеры приложений и манифестов `asc.yaml` для [asc-daemon](../asc-daemon): шаблоны для разработчиков, которые хотят упаковать своё приложение для магазина [AdminService.Cloud](../asc-platform) или кастомного реестра.
+> 🌍 **Language:** English · [🇷🇺 Русская версия](docs/russian/README.md)
 
-## 📂 Что внутри
+Example applications and `asc.yaml` manifests for [asc-daemon](../asc-daemon): templates for developers who want to package their application for the [AdminService.Cloud](../asc-platform) app store or a custom registry.
 
-| Пример | Описание |
+## 📂 What's inside
+
+| Example | Description |
 |---|---|
-| `helloworld/` | 👋 Минимальное Docker-приложение с `asc.yaml` и Dockerfile |
-| `nginx.yaml` | 🌐 Веб-сервер (Docker) |
+| `helloworld/` | 👋 Minimal Docker application with `asc.yaml` and a Dockerfile |
+| `nginx.yaml` | 🌐 Web server (Docker) |
 | `apache.yaml` | 🪶 Apache HTTP Server |
-| `postgresql.yaml` | 🐘 PostgreSQL с автопровижинингом базы |
+| `postgresql.yaml` | 🐘 PostgreSQL with automatic database provisioning |
 | `mysql.yaml` | 🐬 MySQL |
 | `mongodb.yaml` | 🍃 MongoDB |
 | `redis.yaml` | 🔴 Redis |
 
-## 🚀 Как попробовать
+## 🚀 How to try
 
 ```bash
-# установка примера из локального каталога
+# install an example from a local directory
 asc source add file:///path/to/asc-example-apps
 asc install helloworld
 asc app logs helloworld
 ```
 
-## ✍️ Как упаковать своё приложение
+## ✍️ How to package your own application
 
-1. 📝 Создайте `asc.yaml` в корне репозитория (формат — [📦 package-manager](../asc-daemon/docs/package-manager.md)).
-2. 🧪 Проверьте локально: `asc source add file://... && asc install <name>`.
-3. 🛍️ Опубликуйте: PR в [официальный реестр](../registry) или подключите свой GitHub-репозиторий прямо в платформе.
+1. 📝 Create an `asc.yaml` at the root of your repository (format — [📦 package-manager](../asc-daemon/docs/package-manager.md)).
+2. 🧪 Test locally: `asc source add file://... && asc install <name>`.
+3. 🛍️ Publish: open a PR to the [official registry](../registry) or connect your own GitHub repository directly in the platform.
 
-## 🧩 Несколько приложений в одном репозитории (asc.stack.yaml)
+## 🧩 Multiple applications in one repository (asc.stack.yaml)
 
-Один репозиторий может содержать **несколько приложений** (несколько `asc.yaml` в подкаталогах) — но в корне обязан лежать **ровно один** манифест: либо `asc.yaml`, либо `asc.stack.yaml`, соединяющий все вложенные. Стек `asc.stack.yaml` перечисляет приложения и пути к их `asc.yaml`:
+A single repository may contain **several applications** (several `asc.yaml` files in subdirectories) — but the root must hold **exactly one** manifest: either `asc.yaml`, or an `asc.stack.yaml` joining all the nested ones. A stack `asc.stack.yaml` lists the applications and the paths to their `asc.yaml`:
 
 ```yaml
 name: my-stack
 version: 1.0.0
 apps:
   - name: web
-    path: ./web        # каталог с asc.yaml
+    path: ./web        # directory containing asc.yaml
   - name: worker
     path: ./worker
 ```
 
-- 📦 `asc install my-stack` — установка всего стека целиком;
-- 🎯 `asc install my-stack/web` — установка только одного приложения из стека;
-- 🔗 стек может объявлять общие `env` и порядок запуска приложений.
+- 📦 `asc install my-stack` — install the entire stack;
+- 🎯 `asc install my-stack/web` — install a single application from the stack;
+- 🔗 a stack can declare shared `env` and the application startup order.
 
-Подробнее — в [📦 package-manager](../asc-daemon/docs/package-manager.md).
+More details in [📦 package-manager](../asc-daemon/docs/package-manager.md).
 
-## 📚 Документация и Roadmap
+## 📚 Documentation and roadmap
 
-- [📦 Формат asc.yaml и реестров](../asc-daemon/docs/package-manager.md)
-- [🛍️ Магазин приложений](../asc-platform/docs/features/app-store.md)
-- [🎯 ROADMAP](../asc-platform/ROADMAP.md) — задача примеров: `REG-002`
+- [📦 asc.yaml and registry format](../asc-daemon/docs/package-manager.md)
+- [🛍️ App store](../asc-platform/docs/features/app-store.md)
+- [🎯 ROADMAP](../asc-platform/ROADMAP.md) — examples task: `REG-002`
 
-> ⚠️ Каталог `old/` — прошлые наработки, используется как справка.
+> ⚠️ The `old/` directory holds earlier work and is kept for reference only.

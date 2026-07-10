@@ -1,0 +1,55 @@
+name: ➕ Request / propose an example
+description: Suggest a new example app or manifest to add
+title: "[Example]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Suggest a new example that would help others package their apps.
+        If you can, submit a Pull Request with the example directly.
+
+  - type: input
+    id: name
+    attributes:
+      label: Example name
+      description: What should the example be called?
+      placeholder: e.g. rabbitmq, wordpress-stack
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What it demonstrates
+      description: What app or packaging pattern does this example cover?
+      placeholder: Describe the app and why it's a useful example...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: runtime
+    attributes:
+      label: Runtime / type
+      description: Which manifest type does it demonstrate?
+      options:
+        - docker (asc.yaml)
+        - native (asc.yaml)
+        - utility (asc.yaml)
+        - stack (asc.stack.yaml — multiple apps)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Willingness to contribute
+      options:
+        - label: I can submit a Pull Request with this example
+          required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Upstream project, Docker image, links, anything useful

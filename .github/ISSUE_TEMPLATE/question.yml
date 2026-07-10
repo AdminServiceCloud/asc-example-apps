@@ -1,0 +1,49 @@
+name: ❓ Question
+description: Ask a question about packaging apps
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your question! Please fill out the form below.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: State your question clearly
+      placeholder: Describe your question...
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: What are you trying to package? What have you tried?
+      placeholder: |
+        - What app are you trying to package?
+        - What have you already tried?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: Which category does your question fall into?
+      options:
+        - Writing asc.yaml
+        - Stacks (asc.stack.yaml)
+        - Installing / testing locally
+        - Publishing to the registry
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Any other information that might be useful

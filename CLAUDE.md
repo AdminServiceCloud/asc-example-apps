@@ -6,4 +6,4 @@
 
 - 🎯 Roadmap: [../asc-platform/ROADMAP.md](../asc-platform/ROADMAP.md) — задача примеров: `REG-002`.
 - 📦 Формат `asc.yaml` и стеков `asc.stack.yaml`: [../asc-daemon/docs/package-manager.md](../asc-daemon/docs/package-manager.md). В корне репозитория-пакета — ровно один `asc.yaml` или `asc.stack.yaml`.
-- 🌍 Документация — на русском, с emoji. Каталог `old/` — только справка, новые примеры кладутся в корень.
+- 🌍 Документация — **English-first**, с emoji: README на английском, русская версия — в `docs/russian/`. Каталог `old/` — только справка, новые примеры кладутся в корень.
