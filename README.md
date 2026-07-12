@@ -8,13 +8,10 @@ Example applications and `asc.yaml` manifests for [asc-daemon](../asc-daemon): t
 
 | Example | Description |
 |---|---|
-| `helloworld/` | 👋 Minimal Docker application with `asc.yaml` and a Dockerfile |
-| `nginx.yaml` | 🌐 Web server (Docker) |
-| `apache.yaml` | 🪶 Apache HTTP Server |
-| `postgresql.yaml` | 🐘 PostgreSQL with automatic database provisioning |
-| `mysql.yaml` | 🐬 MySQL |
-| `mongodb.yaml` | 🍃 MongoDB |
-| `redis.yaml` | 🔴 Redis |
+| `helloworld/` | 👋 Minimal Docker application: a single `asc.yaml` |
+| `nginx/` | 🌐 Nginx web server pinned to an upstream release, with `asc.settings.yaml` (settings, quota) |
+| `nginx-utility/` | 🧰 Nginx as an on-demand Docker utility (`type: utility`), no persistent service |
+| `cs2/` | 🎮 Counter-Strike 2 stack (`asc.stack.yaml`): shared master installation volume + game server linking it |
 
 ## 🚀 How to try
 

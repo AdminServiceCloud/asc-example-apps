@@ -1,0 +1,21 @@
+# Nginx as an on-demand command-line utility (type: utility), executed through
+# Docker. No long-running service is created: install only pulls the image, and
+# nginx is run ad hoc — e.g. to lint a config or to serve a directory for a
+# minute. The image tag is deliberately unpinned: a utility always uses the
+# current upstream build.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: nginx-utility
+version: 1.0.0
+type: utility
+title: Nginx (utility)
+description: "Nginx as an on-demand Docker utility: config linting and ad-hoc static serving, no persistent service"
+category: system-utilities
+
+runtime:
+  install:
+    - docker pull nginx:alpine
+  uninstall:
+    - docker rmi nginx:alpine
+
+requirements:
+  disk: 100M

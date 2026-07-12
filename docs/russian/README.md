@@ -8,13 +8,10 @@
 
 | Пример | Описание |
 |---|---|
-| `helloworld/` | 👋 Минимальное Docker-приложение с `asc.yaml` и Dockerfile |
-| `nginx.yaml` | 🌐 Веб-сервер (Docker) |
-| `apache.yaml` | 🪶 Apache HTTP Server |
-| `postgresql.yaml` | 🐘 PostgreSQL с автопровижинингом базы |
-| `mysql.yaml` | 🐬 MySQL |
-| `mongodb.yaml` | 🍃 MongoDB |
-| `redis.yaml` | 🔴 Redis |
+| `helloworld/` | 👋 Минимальное Docker-приложение: один `asc.yaml` |
+| `nginx/` | 🌐 Веб-сервер Nginx с закреплённой версией релиза и `asc.settings.yaml` (настройки, квоты) |
+| `nginx-utility/` | 🧰 Nginx как одноразовая Docker-утилита (`type: utility`), без постоянного сервиса |
+| `cs2/` | 🎮 Стек Counter-Strike 2 (`asc.stack.yaml`): общий volume мастер-установки + игровой сервер, линкующий его |
 
 ## 🚀 Как попробовать
 

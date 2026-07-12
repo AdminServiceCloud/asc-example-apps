@@ -1,0 +1,50 @@
+# User-facing settings of one CS2 server instance. Values are exposed to the
+# container as environment variables (env:) understood by the server image.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: server_name
+    type: string
+    title: "Server name"
+    description: "Name shown in the server browser"
+    default: "ASC CS2 Server"
+    limits: { max_length: 64 }
+    env: CS2_SERVERNAME
+
+  - key: game_mode
+    type: enum
+    title: "Game mode"
+    values: [competitive, wingman, casual, deathmatch, custom]
+    default: casual
+    env: CS2_GAMEALIAS
+
+  - key: max_players
+    type: number
+    title: "Max players"
+    default: 10
+    limits: { min: 1, max: 64 }
+    env: CS2_MAXPLAYERS
+
+  - key: srcds_token
+    type: secret
+    title: "Game Server Login Token"
+    description: "Create one at https://steamcommunity.com/dev/managegameservers (app 730)"
+    required: true
+    env: SRCDS_TOKEN
+
+  - key: rcon_password
+    type: secret
+    title: "RCON password"
+    required: true
+    env: CS2_RCONPW
+
+  - key: server_password
+    type: secret
+    title: "Join password"
+    description: "Leave empty for a public server"
+    default: ""
+    env: CS2_PW
+
+quota:
+  max_cpu: 2
+  max_ram: 4G
+  max_disk: 5G

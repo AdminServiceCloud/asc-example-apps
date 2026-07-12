@@ -1,0 +1,41 @@
+# The game server: mounts the master's game files (VPKs) read-only from the
+# shared volume `cs2-master-data` and keeps only its own configs/logs/demos in
+# a private volume — no per-instance ~60 GB download. Install several copies
+# of this app to run many servers off one master installation.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: cs2-server
+version: 1.0.0
+type: docker
+title: CS2 dedicated server
+description: "Counter-Strike 2 dedicated server that links the shared master installation volume instead of downloading its own game files"
+category: game-servers
+settings: ./asc.settings.yaml
+
+runtime:
+  image: joedwards32/cs2:latest
+
+env:
+  - name: CS2_PORT
+    default: 27015
+    description: "Game port (UDP/TCP)"
+  - name: TV_PORT
+    default: 27020
+    description: "SourceTV port (UDP)"
+
+ports: [27015, 27020]
+
+volumes:
+  # Game files (VPKs) from the master installation — shared, read-only.
+  # The volume name matches the one declared by cs2-master (../master/asc.yaml).
+  - cs2-master-data:/home/steam/cs2-dedicated:ro
+  # This instance's own writable data: configs, logs, demos.
+  - cs2-server-data:/home/steam/cs2-server
+
+requirements:
+  ram: 4G
+  disk: 2G   # instance data only; the game files live in the master volume
+  cpu: 2
+
+healthcheck:
+  command: "pidof cs2"
+  interval: 60s

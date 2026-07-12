@@ -1,0 +1,36 @@
+# Nginx as a long-running web server (type: docker) pinned to a specific
+# upstream release. Upgrading the package (a new git tag) bumps the image tag,
+# so `asc app upgrade nginx` moves the server to the next release predictably.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: nginx
+version: 1.28.0
+type: docker
+title: Nginx
+description: "High-performance web server and reverse proxy, pinned to an upstream release"
+category: web
+settings: ./asc.settings.yaml
+
+runtime:
+  # Pinned version: the package version tracks the upstream nginx release.
+  image: nginx:1.28
+
+env:
+  - name: TZ
+    default: UTC
+    description: "Container time zone (log timestamps)"
+
+ports: [80, 443]
+
+volumes:
+  - /etc/nginx/conf.d        # virtual host configuration
+  - /usr/share/nginx/html    # static web content
+  - /var/log/nginx           # access and error logs
+
+requirements:
+  ram: 128M
+  disk: 500M
+  cpu: 0.5
+
+healthcheck:
+  http: /
+  interval: 30s

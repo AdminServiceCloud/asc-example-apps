@@ -1,0 +1,33 @@
+# User-facing settings for the nginx package. The platform UI renders a form
+# from this file; the CLI asks interactively; silent installs take the defaults.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: http_port
+    type: number
+    title: "HTTP port"
+    description: "Host port published for plain HTTP traffic"
+    default: 80
+    limits: { min: 1, max: 65535 }
+    env: NGINX_HTTP_PORT
+
+  - key: https_port
+    type: number
+    title: "HTTPS port"
+    description: "Host port published for TLS traffic"
+    default: 443
+    limits: { min: 1, max: 65535 }
+    env: NGINX_HTTPS_PORT
+
+  - key: worker_processes
+    type: enum
+    title: "Worker processes"
+    description: "nginx worker_processes directive"
+    values: [auto, "1", "2", "4"]
+    default: auto
+    env: NGINX_WORKER_PROCESSES
+
+# Resource limits applied to the container at install/upgrade time.
+quota:
+  max_cpu: 1
+  max_ram: 256M
+  max_disk: 1G

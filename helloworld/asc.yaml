@@ -1,0 +1,22 @@
+# Minimal ASC application: a tiny web server that answers "Hello World".
+# This is the smallest useful asc.yaml — one Docker image, one port, a healthcheck.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: helloworld
+version: 1.0.0
+type: docker
+title: Hello World
+description: "Minimal Docker application: a tiny web server that responds with Hello World"
+category: web
+
+runtime:
+  image: crccheck/hello-world:latest
+
+ports: [8000]
+
+requirements:
+  ram: 64M
+  disk: 100M
+
+healthcheck:
+  http: /
+  interval: 30s
