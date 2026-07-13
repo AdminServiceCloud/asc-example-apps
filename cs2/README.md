@@ -1,28 +1,19 @@
-# 🎮 cs2 — Counter-Strike 2 stack with a shared master installation
+# 🎮 cs2 — Counter-Strike 2 dedicated server
 
-A two-app stack ([asc.stack.yaml](asc.stack.yaml)) showing how game servers can
-**share one copy of the game files** instead of each downloading ~60 GB:
-
-| App | What it does |
-|---|---|
-| [master/](master) | 🗄️ SteamCMD keeps the CS2 game files (VPKs) in the named volume `cs2-master-data`, then exits |
-| [server/](server) | 🕹️ The dedicated server: mounts `cs2-master-data` **read-only** and keeps its own configs/logs in a private volume |
-
-```
-┌─────────────┐   writes    ┌──────────────────┐   read-only   ┌─────────────┐
-│ cs2-master  │ ──────────▶ │  cs2-master-data │ ◀──────────── │ cs2-server  │
-│ (SteamCMD)  │             │  (named volume,  │ ◀──────────── │ cs2-server2 │
-└─────────────┘             │   VPK files)     │ ◀──────────── │     ...     │
-                            └──────────────────┘               └─────────────┘
-```
+A one-app stack ([asc.stack.yaml](asc.stack.yaml)) running the
+[joedwards32/cs2](https://github.com/joedwards32/CS2) dedicated server image.
+The image downloads and updates the game (~60 GB) itself via SteamCMD on
+start; the whole installation plus the instance's configs/logs/demos live in
+a **private volume** under `/asc/apps/cs2-server/data/`, so they survive
+container recreation and upgrades.
 
 ## 🚀 Install
 
 ```bash
 asc source add file:///path/to/asc-example-apps
-asc install cs2            # the whole stack (master first — depends_on)
-asc install cs2/server     # one more server instance on the same master volume
+asc install cs2
 asc app settings cs2-server  # set the GSLT token, RCON password, game mode
+asc app start cs2-server     # first start downloads the game (~60 GB)
 ```
 
 > 🔑 A [Game Server Login Token](https://steamcommunity.com/dev/managegameservers)
@@ -30,10 +21,20 @@ asc app settings cs2-server  # set the GSLT token, RCON password, game mode
 
 ## 📖 What it demonstrates
 
-- `asc.stack.yaml`: several apps in one repository, `depends_on` startup order,
-  shared stack `env` (`STEAM_APP_ID`);
-- **volume linking**: both apps reference the same named volume
-  `cs2-master-data` — the master writes game files, servers mount them `:ro`;
-- `start_command` with `${VAR}` interpolation (the master's SteamCMD command);
+- `asc.stack.yaml`: the stack layout (apps in subdirectories of one repository);
+- a **private volume** (`/home/steam/cs2-dedicated`) mapped under the app's
+  own `data/` directory on the host;
 - settings of every type: `string` with `limits`, `enum`, `number`, `secret`;
-- per-app resource `quota` (100 G disk for the master, 4 G RAM per server).
+- resource `quota` (100 G disk, 4 G RAM, 2 CPUs).
+
+## 🗺️ Planned: a shared master installation
+
+The original design — one "master" app keeping the game files in a shared
+named volume mounted read-only by every server instance (no per-instance
+~60 GB download) — is on hold until the daemon implements:
+
+- `start_command` execution from `asc.settings.yaml` (DMN-018), which the
+  master's SteamCMD run needs;
+- a copy-up overlay for the image's writable paths: the joedwards32/cs2
+  entrypoint writes configs and scripts into its game directory, so a plain
+  read-only mount cannot feed it.

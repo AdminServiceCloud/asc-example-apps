@@ -1,13 +1,12 @@
-# The game server: mounts the master's game files (VPKs) read-only from the
-# shared volume `cs2-master-data` and keeps only its own configs/logs/demos in
-# a private volume — no per-instance ~60 GB download. Install several copies
-# of this app to run many servers off one master installation.
+# The game server: the image (joedwards32/cs2) downloads and updates the CS2
+# installation itself via SteamCMD on start, and keeps it — together with the
+# instance's configs/logs/demos — in one writable volume it owns.
 # Schema: https://registry.adminservice.cloud/schema/asc.schema.json
 name: cs2-server
-version: 1.0.0
+version: 1.1.0
 type: docker
 title: CS2 dedicated server
-description: "Counter-Strike 2 dedicated server that links the shared master installation volume instead of downloading its own game files"
+description: "Counter-Strike 2 dedicated server; the game installation (~60 GB) is downloaded on first start into the instance's private volume"
 category: game-servers
 settings: ./asc.settings.yaml
 
@@ -25,15 +24,14 @@ env:
 ports: [27015, 27020]
 
 volumes:
-  # Game files (VPKs) from the master installation — shared, read-only.
-  # The volume name matches the one declared by cs2-master (../master/asc.yaml).
-  - cs2-master-data:/home/steam/cs2-dedicated:ro
-  # This instance's own writable data: configs, logs, demos.
-  - cs2-server-data:/home/steam/cs2-server
+  # Full game installation + this instance's configs, logs and demos.
+  # The private form maps to a host directory under /asc/apps/<id>/data/,
+  # so the ~60 GB download survives container recreation and upgrades.
+  - /home/steam/cs2-dedicated
 
 requirements:
   ram: 4G
-  disk: 2G   # instance data only; the game files live in the master volume
+  disk: 80G   # the game installation is ~60 GB plus updates headroom
   cpu: 2
 
 healthcheck:

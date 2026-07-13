@@ -11,7 +11,7 @@ Example applications and `asc.yaml` manifests for [asc-daemon](../asc-daemon): t
 | `helloworld/` | 👋 Minimal Docker application: a single `asc.yaml` |
 | `nginx/` | 🌐 Nginx web server pinned to an upstream release, with `asc.settings.yaml` (settings, quota) |
 | `nginx-utility/` | 🧰 Nginx as an on-demand Docker utility (`type: utility`), no persistent service |
-| `cs2/` | 🎮 Counter-Strike 2 stack (`asc.stack.yaml`): shared master installation volume + game server linking it |
+| `cs2/` | 🎮 Counter-Strike 2 stack (`asc.stack.yaml`): dedicated server with the game installation in a private per-instance volume |
 
 ## 🚀 How to try
 

@@ -1,23 +1,18 @@
-# Counter-Strike 2 stack: one "master" installation that keeps the game files
-# (VPKs, ~60 GB) in a shared named volume + a game server that mounts that
-# volume instead of downloading its own copy. Additional server instances
-# reuse the same master volume.
+# Counter-Strike 2 stack: a dedicated server that owns its full game
+# installation (~60 GB) in a private per-instance volume.
+#
+# A shared "master" installation (one game-files volume reused read-only by
+# every server instance) is planned but needs daemon features that are not
+# implemented yet: start_command execution (DMN-018) and a copy-up overlay
+# for the image's writable paths — the joedwards32/cs2 image manages its
+# game directory itself and cannot run from a read-only mount.
 # Schema: https://registry.adminservice.cloud/schema/asc.stack.schema.json
 name: cs2
-version: 1.0.0
+version: 1.1.0
 title: Counter-Strike 2 server
-description: "CS2 dedicated server with a shared master installation: game VPKs live in one volume reused by every server instance"
+description: "CS2 dedicated server: the game installation lives in a private volume owned by the instance"
 category: game-servers
 
 apps:
-  - name: master
-    path: ./master
   - name: server
     path: ./server
-    depends_on: [master]   # game files must be present before a server starts
-
-# Shared environment for every app of the stack.
-env:
-  - name: STEAM_APP_ID
-    default: 730
-    description: "Steam application id of the CS2 dedicated server"

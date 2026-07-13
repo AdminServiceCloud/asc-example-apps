@@ -47,4 +47,4 @@ settings:
 quota:
   max_cpu: 2
   max_ram: 4G
-  max_disk: 5G
+  max_disk: 100G
