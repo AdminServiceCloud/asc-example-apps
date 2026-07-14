@@ -22,13 +22,13 @@ asc app start cs2-server     # first start downloads the game (~60 GB)
 ## 📖 What it demonstrates
 
 - `asc.stack.yaml`: the stack layout (apps in subdirectories of one repository);
-- a **private volume** (`/home/steam/cs2-dedicated`) mapped under the app's
-  own `data/` directory on the host;
 - `runtime: stdin/tty` — the container is created like `docker run -it`, so
   `asc attach cs2-server` is a real interactive server console;
 - settings of every type: `string` with `limits`, `enum` (game mode, start
   map — `CS2_STARTMAP` goes into the server launch as `+map`), `number`,
-  `secret`;
+  `secret`, `ports` (published on the host **and** exposed via env, so the
+  server always listens where Docker forwards) and `volumes` (the game
+  installation in the app's `data` folder, `/asc/apps/<id>/data`);
 - resource `quota` (100 G disk, 4 G RAM, 2 CPUs).
 
 ## 🗺️ Planned: a shared master installation

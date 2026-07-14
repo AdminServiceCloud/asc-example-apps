@@ -1,5 +1,7 @@
 # User-facing settings of one CS2 server instance. Values are exposed to the
-# container as environment variables (env:) understood by the server image.
+# container as environment variables (env:) understood by the server image;
+# `type: ports` settings are also published on the host, `type: volumes`
+# settings define the app's mounts.
 # Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
 settings:
   - key: server_name
@@ -25,19 +27,29 @@ settings:
     default: de_dust2
     env: CS2_STARTMAP
 
+  # `ports` settings are published on the host AND exposed via env, so the
+  # image launches the server on the same port Docker forwards.
   - key: game_port
-    type: number
+    type: ports
     title: "Game port (UDP/TCP)"
-    default: 27015
+    default: [27015]
     limits: { min: 1024, max: 65535 }
     env: CS2_PORT
 
   - key: tv_port
-    type: number
+    type: ports
     title: "SourceTV port (UDP)"
-    default: 27020
+    default: [27020]
     limits: { min: 1024, max: 65535 }
     env: TV_PORT
+
+  # Full game installation + this instance's configs, logs and demos. The
+  # plain path mounts the app's data folder (/asc/apps/<id>/data), so the
+  # ~60 GB download survives container recreation and upgrades.
+  - key: game_data
+    type: volumes
+    title: "Game installation volume"
+    default: [/home/steam/cs2-dedicated]
 
   - key: max_players
     type: number

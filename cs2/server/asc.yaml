@@ -3,7 +3,7 @@
 # instance's configs/logs/demos — in one writable volume it owns.
 # Schema: https://registry.adminservice.cloud/schema/asc.schema.json
 name: cs2-server
-version: 1.3.0
+version: 1.4.0
 type: docker
 title: CS2 dedicated server
 description: "Counter-Strike 2 dedicated server; the game installation (~60 GB) is downloaded on first start into the instance's private volume"
@@ -17,15 +17,9 @@ runtime:
   stdin: true
   tty: true
 
-# All environment variables come from asc.settings.yaml (settings with env:).
-
-ports: [27015, 27020]
-
-volumes:
-  # Full game installation + this instance's configs, logs and demos.
-  # The private form mounts the app's data folder (/asc/apps/<id>/data),
-  # so the ~60 GB download survives container recreation and upgrades.
-  - /home/steam/cs2-dedicated
+# Environment variables, published ports and volumes are all declared in
+# asc.settings.yaml (settings with env:, type: ports, type: volumes) — the
+# manifest describes only the runtime itself.
 
 requirements:
   ram: 4G
