@@ -17,6 +17,28 @@ settings:
     default: casual
     env: CS2_GAMEALIAS
 
+  - key: map
+    type: enum
+    title: "Start map"
+    description: "Map the server starts on (goes into the launch as +map)"
+    values: [de_dust2, de_mirage, de_inferno, de_nuke, de_ancient, de_anubis, de_vertigo, de_overpass, de_train]
+    default: de_dust2
+    env: CS2_STARTMAP
+
+  - key: game_port
+    type: number
+    title: "Game port (UDP/TCP)"
+    default: 27015
+    limits: { min: 1024, max: 65535 }
+    env: CS2_PORT
+
+  - key: tv_port
+    type: number
+    title: "SourceTV port (UDP)"
+    default: 27020
+    limits: { min: 1024, max: 65535 }
+    env: TV_PORT
+
   - key: max_players
     type: number
     title: "Max players"
