@@ -3,7 +3,7 @@
 # instance's configs/logs/demos — in one writable volume it owns.
 # Schema: https://registry.adminservice.cloud/schema/asc.schema.json
 name: cs2-server
-version: 1.4.0
+version: 1.5.0
 type: docker
 title: CS2 dedicated server
 description: "Counter-Strike 2 dedicated server; the game installation (~60 GB) is downloaded on first start into the instance's private volume"
