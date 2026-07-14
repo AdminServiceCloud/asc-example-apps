@@ -35,6 +35,7 @@ settings:
     default: [27015]
     limits: { min: 1024, max: 65535 }
     env: CS2_PORT
+    protocol: both
 
   - key: tv_port
     type: ports
@@ -42,6 +43,7 @@ settings:
     default: [27020]
     limits: { min: 1024, max: 65535 }
     env: TV_PORT
+    protocol: udp
 
   # Full game installation + this instance's configs, logs and demos. The
   # plain path mounts the app's data folder (/asc/apps/<id>/data), so the
