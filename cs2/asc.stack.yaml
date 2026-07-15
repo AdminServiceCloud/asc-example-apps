@@ -8,7 +8,7 @@
 # game directory itself and cannot run from a read-only mount.
 # Schema: https://registry.adminservice.cloud/schema/asc.stack.schema.json
 name: cs2
-version: 1.5.0
+version: 1.5.1
 title: Counter-Strike 2 server
 description: "CS2 dedicated server: the game installation lives in a private volume owned by the instance"
 category: game-servers

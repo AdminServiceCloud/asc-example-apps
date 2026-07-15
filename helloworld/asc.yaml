@@ -2,7 +2,7 @@
 # This is the smallest useful asc.yaml — one Docker image, one port, a healthcheck.
 # Schema: https://registry.adminservice.cloud/schema/asc.schema.json
 name: helloworld
-version: 1.0.0
+version: 1.0.1
 type: docker
 title: Hello World
 description: "Minimal Docker application: a tiny web server that responds with Hello World"

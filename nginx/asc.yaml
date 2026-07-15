@@ -3,7 +3,7 @@
 # so `asc app upgrade nginx` moves the server to the next release predictably.
 # Schema: https://registry.adminservice.cloud/schema/asc.schema.json
 name: nginx
-version: 1.28.0
+version: 1.28.1
 type: docker
 title: Nginx
 description: "High-performance web server and reverse proxy, pinned to an upstream release"
