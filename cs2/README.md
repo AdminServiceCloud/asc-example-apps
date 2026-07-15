@@ -24,11 +24,18 @@ asc app start cs2-server     # first start downloads the game (~60 GB)
 - `asc.stack.yaml`: the stack layout (apps in subdirectories of one repository);
 - `runtime: stdin/tty` — the container is created like `docker run -it`, so
   `asc attach cs2-server` is a real interactive server console;
+- **every environment variable documented by the [joedwards32/cs2](https://github.com/joedwards32/CS2)
+  image** mapped to a setting (~35 of them: core server, game mode, bots,
+  SourceTV/CSTV, logging, workshop maps, entrypoint debug/validation flags);
 - settings of every type: `string` with `limits`, `enum` (game mode, start
   map — `CS2_STARTMAP` goes into the server launch as `+map`), `number`,
-  `secret`, `ports` (published on the host **and** exposed via env, so the
-  server always listens where Docker forwards) and `volumes` (the game
-  installation in the app's `data` folder, `/asc/apps/<id>/data`);
+  `boolean`, `secret`, `ports` (published on the host **and** exposed via
+  env, so the server always listens where Docker forwards) and `volumes`
+  (the game installation in the app's `data` folder, `/asc/apps/<id>/data`);
+- **`allow_custom` on an `enum` setting** (`game_mode`): the common aliases
+  (`casual`, `competitive`, `wingman`, `deathmatch`, `custom`) are listed,
+  but any other official `CS2_GAMEALIAS` value (e.g. `scrimcomp5v5`) can be
+  typed in directly;
 - resource `quota` (100 G disk, 4 G RAM, 2 CPUs).
 
 ## 🗺️ Planned: a shared master installation

@@ -1,0 +1,97 @@
+# User-facing settings of one 7 Days to Die server instance. Values are
+# exposed to the container as the environment variables documented by the
+# renegademaster/7_days_to_die-dedicated-server image; `type: ports` settings
+# are also published on the host, `type: volumes` settings define the app's
+# mounts.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: server_name
+    type: string
+    title: "Server name"
+    description: "Publicly visible server name"
+    default: "7DaysToDieServer"
+    limits: { max_length: 64, pattern: "^[a-zA-Z0-9]+$" }
+    env: SERVER_NAME
+
+  - key: server_desc
+    type: string
+    title: "Server description"
+    description: "Publicly visible server description"
+    default: "7DaysToDieServer"
+    limits: { max_length: 128, pattern: "^[a-zA-Z0-9]+$" }
+    env: SERVER_DESC
+
+  - key: game_version
+    type: enum
+    title: "Game version"
+    description: "SteamCMD branch to serve; pick a preset or enter a custom branch/build id"
+    values: [public, latest_experimental]
+    default: public
+    allow_custom: true
+    env: GAME_VERSION
+
+  - key: public_server
+    type: enum
+    title: "Server visibility"
+    description: "0 = not listed, 1 = friends only, 2 = friends of friends, 3 = everyone"
+    values: [0, 1, 2, 3]
+    default: 2
+    env: PUBLIC_SERVER
+
+  - key: max_players
+    type: number
+    title: "Max players"
+    default: 8
+    limits: { min: 1, max: 64 }
+    env: MAX_PLAYERS
+
+  - key: server_password
+    type: secret
+    title: "Server password"
+    description: "Leave empty for a public server"
+    default: ""
+    env: SERVER_PASSWORD
+
+  - key: server_log_file
+    type: string
+    title: "Log file path"
+    description: "Path (inside the container) to store the server log file; empty logs to stdout only"
+    default: ""
+    env: SERVER_LOG_FILE
+
+  # The game/query port is published on the host AND exposed via env, so the
+  # image listens on the same port Docker forwards.
+  - key: game_port
+    type: ports
+    title: "Game port (TCP+UDP)"
+    default: [26900]
+    limits: { min: 1024, max: 65535 }
+    env: QUERY_PORT
+    protocol: both
+
+  # Two more ports the image always uses at base+1/base+2, with no env var of
+  # their own — republish them alongside game_port if you change it.
+  - key: extra_game_ports
+    type: ports
+    title: "Additional game ports (UDP)"
+    description: "Fixed at game_port+1 and game_port+2 by the image; keep these two numbers in sync with game_port"
+    default: [26901, 26902]
+    limits: { min: 1024, max: 65535 }
+    protocol: udp
+
+  # Game server files (downloaded by SteamCMD on first start) and the
+  # server's own config, kept in this instance's private volumes.
+  - key: server_files
+    type: volumes
+    title: "Game server files volume"
+    default: [/home/steam/7DTDServer]
+
+  - key: server_config
+    type: volumes
+    title: "Server config volume"
+    default: [/home/steam/7DTDConfig:gameconfig]
+
+quota:
+  max_cpu: 2
+  max_ram: 4G
+  max_disk: 25G

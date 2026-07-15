@@ -1,31 +1,38 @@
-# User-facing settings of one CS2 server instance. Values are exposed to the
-# container as environment variables (env:) understood by the server image;
-# `type: ports` settings are also published on the host, `type: volumes`
-# settings define the app's mounts.
+# User-facing settings of one CS2 server instance — every environment
+# variable documented by the joedwards32/cs2 image (https://github.com/joedwards32/CS2)
+# mapped to a setting. `type: ports` settings are also published on the host,
+# `type: volumes` settings define the app's mounts.
 # Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
 settings:
+  # ── Core server ──────────────────────────────────────────────────────────
   - key: server_name
     type: string
     title: "Server name"
-    description: "Name shown in the server browser"
+    description: "Name shown in the server browser (CS2_SERVERNAME)"
     default: "ASC CS2 Server"
     limits: { max_length: 64 }
     env: CS2_SERVERNAME
 
-  - key: game_mode
-    type: enum
-    title: "Game mode"
-    values: [competitive, wingman, casual, deathmatch, custom]
-    default: casual
-    env: CS2_GAMEALIAS
+  - key: cheats
+    type: boolean
+    title: "Enable cheats"
+    description: "sv_cheats (CS2_CHEATS)"
+    default: false
+    env: CS2_CHEATS
 
-  - key: map
-    type: enum
-    title: "Start map"
-    description: "Map the server starts on (goes into the launch as +map)"
-    values: [de_dust2, de_mirage, de_inferno, de_nuke, de_ancient, de_anubis, de_vertigo, de_overpass, de_train]
-    default: de_dust2
-    env: CS2_STARTMAP
+  - key: server_hibernate
+    type: boolean
+    title: "Hibernate when empty"
+    description: "Low-CPU state while no players are connected (CS2_SERVER_HIBERNATE)"
+    default: false
+    env: CS2_SERVER_HIBERNATE
+
+  - key: bind_ip
+    type: string
+    title: "Bind IP"
+    description: "Listen on a specific interface instead of all interfaces (CS2_IP); leave empty for the default"
+    default: ""
+    env: CS2_IP
 
   # `ports` settings are published on the host AND exposed via env, so the
   # image launches the server on the same port Docker forwards.
@@ -37,35 +44,21 @@ settings:
     env: CS2_PORT
     protocol: both
 
-  - key: tv_port
+  - key: rcon_port
     type: ports
-    title: "SourceTV port (UDP)"
-    default: [27020]
+    title: "RCON proxy port (TCP)"
+    description: "Optional separate TCP port for RCON (CS2_RCON_PORT); leave unset to use the game port"
+    required: false
     limits: { min: 1024, max: 65535 }
-    env: TV_PORT
-    protocol: udp
+    env: CS2_RCON_PORT
+    protocol: tcp
 
-  # Full game installation + this instance's configs, logs and demos. The
-  # plain path mounts the app's data folder (/asc/apps/<id>/data), so the
-  # ~60 GB download survives container recreation and upgrades.
-  - key: game_data
-    type: volumes
-    title: "Game installation volume"
-    default: [/home/steam/cs2-dedicated]
-
-  - key: max_players
-    type: number
-    title: "Max players"
-    default: 10
-    limits: { min: 1, max: 64 }
-    env: CS2_MAXPLAYERS
-
-  - key: srcds_token
-    type: secret
-    title: "Game Server Login Token"
-    description: "Create one at https://steamcommunity.com/dev/managegameservers (app 730)"
-    required: true
-    env: SRCDS_TOKEN
+  - key: lan_mode
+    type: boolean
+    title: "LAN mode"
+    description: "CS2_LAN"
+    default: false
+    env: CS2_LAN
 
   - key: rcon_password
     type: secret
@@ -76,9 +69,248 @@ settings:
   - key: server_password
     type: secret
     title: "Join password"
-    description: "Leave empty for a public server"
+    description: "Leave empty for a public server (CS2_PW)"
     default: ""
     env: CS2_PW
+
+  - key: max_players
+    type: number
+    title: "Max players"
+    default: 10
+    limits: { min: 1, max: 64 }
+    env: CS2_MAXPLAYERS
+
+  - key: additional_args
+    type: string
+    title: "Additional launch arguments"
+    description: "Extra arguments appended to the CS2 launch command (CS2_ADDITIONAL_ARGS)"
+    default: ""
+    env: CS2_ADDITIONAL_ARGS
+
+  - key: srcds_token
+    type: secret
+    title: "Game Server Login Token"
+    description: "Create one at https://steamcommunity.com/dev/managegameservers (app 730)"
+    required: true
+    env: SRCDS_TOKEN
+
+  # ── Game mode ────────────────────────────────────────────────────────────
+  - key: game_mode
+    type: enum
+    title: "Game mode"
+    description: "CS2_GAMEALIAS; other official aliases (e.g. scrimcomp5v5, scrimcomp2v2) can be typed in directly"
+    values: [casual, competitive, wingman, deathmatch, custom]
+    default: casual
+    allow_custom: true
+    env: CS2_GAMEALIAS
+
+  - key: game_type
+    type: number
+    title: "Game type (advanced)"
+    description: "Raw game_type convar, only used when game_mode/CS2_GAMEALIAS is left unset (CS2_GAMETYPE)"
+    default: 0
+    limits: { min: 0, max: 9 }
+    env: CS2_GAMETYPE
+
+  - key: game_mode_index
+    type: number
+    title: "Game mode index (advanced)"
+    description: "Raw game_mode convar, only used when game_mode/CS2_GAMEALIAS is left unset (CS2_GAMEMODE)"
+    default: 1
+    limits: { min: 0, max: 2 }
+    env: CS2_GAMEMODE
+
+  - key: map_group
+    type: string
+    title: "Map group"
+    description: "Map pool selection (CS2_MAPGROUP)"
+    default: "mg_active"
+    env: CS2_MAPGROUP
+
+  - key: map
+    type: enum
+    title: "Start map"
+    description: "Map the server starts on (goes into the launch as +map, CS2_STARTMAP)"
+    values: [de_dust2, de_mirage, de_inferno, de_cache, de_nuke, de_ancient, de_anubis, de_vertigo, de_overpass, de_train]
+    default: de_mirage
+    allow_custom: true
+    env: CS2_STARTMAP
+
+  # ── Bots ─────────────────────────────────────────────────────────────────
+  - key: bot_difficulty
+    type: enum
+    title: "Bot difficulty"
+    description: "0 = easy, 1 = normal, 2 = hard, 3 = expert (CS2_BOT_DIFFICULTY); leave unset to disable bots"
+    values: [0, 1, 2, 3]
+    required: false
+    env: CS2_BOT_DIFFICULTY
+
+  - key: bot_quota
+    type: number
+    title: "Bot quota"
+    description: "Number of bots to add (CS2_BOT_QUOTA)"
+    required: false
+    limits: { min: 0, max: 32 }
+    env: CS2_BOT_QUOTA
+
+  - key: bot_quota_mode
+    type: enum
+    title: "Bot quota mode"
+    description: "fill = top up to quota, competitive = teams balanced to quota (CS2_BOT_QUOTA_MODE)"
+    values: [fill, competitive]
+    required: false
+    env: CS2_BOT_QUOTA_MODE
+
+  # ── SourceTV / CSTV ──────────────────────────────────────────────────────
+  - key: tv_enable
+    type: boolean
+    title: "Enable SourceTV"
+    default: false
+    env: TV_ENABLE
+
+  - key: tv_port
+    type: ports
+    title: "SourceTV port (UDP)"
+    default: [27020]
+    limits: { min: 1024, max: 65535 }
+    env: TV_PORT
+    protocol: udp
+
+  - key: tv_autorecord
+    type: boolean
+    title: "SourceTV auto-record"
+    description: "Automatically record CSTV demos (TV_AUTORECORD)"
+    default: false
+    env: TV_AUTORECORD
+
+  - key: tv_password
+    type: secret
+    title: "SourceTV password"
+    description: "Spectator password for CSTV (TV_PW)"
+    default: ""
+    env: TV_PW
+
+  - key: tv_relay_password
+    type: secret
+    title: "SourceTV relay password"
+    description: "Password for CSTV relay proxies (TV_RELAY_PW)"
+    default: ""
+    env: TV_RELAY_PW
+
+  - key: tv_maxrate
+    type: number
+    title: "SourceTV max rate"
+    description: "Max spectator bandwidth in bytes/sec, 0 = unlimited (TV_MAXRATE)"
+    default: 0
+    limits: { min: 0 }
+    env: TV_MAXRATE
+
+  - key: tv_delay
+    type: number
+    title: "SourceTV delay"
+    description: "Broadcast delay in seconds (TV_DELAY)"
+    default: 0
+    limits: { min: 0 }
+    env: TV_DELAY
+
+  # ── Logging ──────────────────────────────────────────────────────────────
+  - key: log_enable
+    type: boolean
+    title: "Enable logging"
+    default: true
+    env: CS2_LOG
+
+  - key: log_money
+    type: boolean
+    title: "Log money changes"
+    default: false
+    env: CS2_LOG_MONEY
+
+  - key: log_detail
+    type: enum
+    title: "Combat log detail"
+    description: "0 = off, 1 = enemy, 2 = friendly, 3 = all (CS2_LOG_DETAIL)"
+    values: [0, 1, 2, 3]
+    default: 0
+    env: CS2_LOG_DETAIL
+
+  - key: log_items
+    type: boolean
+    title: "Log item pickups"
+    default: false
+    env: CS2_LOG_ITEMS
+
+  - key: log_file
+    type: boolean
+    title: "Log to file"
+    default: false
+    env: CS2_LOG_FILE
+
+  - key: log_echo
+    type: boolean
+    title: "Echo log to console"
+    default: false
+    env: CS2_LOG_ECHO
+
+  - key: disconnect_kills
+    type: boolean
+    title: "Kill on disconnect"
+    description: "Count a disconnect as a kill for the disconnecting player (CS2_DISCONNECT_KILLS)"
+    default: true
+    env: CS2_DISCONNECT_KILLS
+
+  - key: log_http_url
+    type: string
+    title: "HTTP log endpoint"
+    description: "POST logs to this URL instead of/in addition to file logging (CS2_LOG_HTTP_URL)"
+    default: ""
+    env: CS2_LOG_HTTP_URL
+
+  # ── Workshop & maps ──────────────────────────────────────────────────────
+  - key: workshop_map
+    type: string
+    title: "Workshop start map"
+    description: "Steam Workshop map ID to load on startup (CS2_HOST_WORKSHOP_MAP)"
+    default: ""
+    env: CS2_HOST_WORKSHOP_MAP
+
+  - key: workshop_collection
+    type: string
+    title: "Workshop collection"
+    description: "Steam Workshop collection ID to download (CS2_HOST_WORKSHOP_COLLECTION)"
+    default: ""
+    env: CS2_HOST_WORKSHOP_COLLECTION
+
+  # ── Debug & validation ───────────────────────────────────────────────────
+  - key: debug_level
+    type: enum
+    title: "Entrypoint debug verbosity"
+    description: "0 = none, 1 = steamcmd, 2 = cs2, 3 = all (DEBUG)"
+    values: [0, 1, 2, 3]
+    default: 0
+    env: DEBUG
+
+  - key: steam_validate
+    type: boolean
+    title: "Validate game files on start"
+    description: "Forces SteamCMD to validate/redownload game files (STEAMAPPVALIDATE)"
+    default: false
+    env: STEAMAPPVALIDATE
+
+  - key: config_archive_url
+    type: string
+    title: "Config archive URL"
+    description: "tar/zip archive of config files, extracted over the game's cfg on start (CS2_CFG_URL)"
+    default: ""
+    env: CS2_CFG_URL
+
+  # Full game installation + this instance's configs, logs and demos. The
+  # plain path mounts the app's data folder (/asc/apps/<id>/data), so the
+  # ~60 GB download survives container recreation and upgrades.
+  - key: game_data
+    type: volumes
+    title: "Game installation volume"
+    default: [/home/steam/cs2-dedicated]
 
 quota:
   max_cpu: 2

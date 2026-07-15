@@ -12,6 +12,7 @@ Example applications and `asc.yaml` manifests for [asc-daemon](../asc-daemon): t
 | `nginx/` | 🌐 Nginx web server pinned to an upstream release, with `asc.settings.yaml` (settings, quota) |
 | `nginx-utility/` | 🧰 Nginx as an on-demand Docker utility (`type: utility`), no persistent service |
 | `cs2/` | 🎮 Counter-Strike 2 stack (`asc.stack.yaml`): dedicated server with the game installation in a private per-instance volume |
+| `7dtd/` | 🧟 7 Days to Die dedicated server: every image env var mapped to a setting, including an `enum` with `allow_custom` |
 
 ## 🚀 How to try
 

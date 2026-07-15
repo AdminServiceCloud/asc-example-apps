@@ -1,0 +1,27 @@
+# 7 Days to Die dedicated server: the image (renegademaster/7_days_to_die-dedicated-server)
+# downloads the game itself via SteamCMD on start and keeps it, together with
+# this instance's config and saves, in the app's own volumes.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: 7dtd
+version: 1.0.0
+type: docker
+title: 7 Days to Die server
+description: "7 Days to Die dedicated server; the game installation is downloaded on first start into the instance's private volumes"
+category: game-servers
+settings: ./asc.settings.yaml
+
+runtime:
+  image: renegademaster/7_days_to_die-dedicated-server:1.0.0
+
+# Environment variables, published ports and volumes are all declared in
+# asc.settings.yaml (settings with env:, type: ports, type: volumes) — the
+# manifest describes only the runtime itself.
+
+requirements:
+  ram: 4G
+  disk: 20G   # the game installation plus updates headroom
+  cpu: 2
+
+healthcheck:
+  command: "pgrep -f 7DaysToDieServer.x86_64"
+  interval: 60s
