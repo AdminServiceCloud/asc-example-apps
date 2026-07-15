@@ -2,7 +2,7 @@
 # latency, jitter, packet loss) measured against this server itself.
 # Schema: https://registry.adminservice.cloud/schema/asc.schema.json
 name: server-speedtest
-version: 1.0.0
+version: 1.6.0
 type: docker
 title: Server Speedtest
 description: "Self-hosted network speed test against this server: download, upload, latency, jitter, packet loss"

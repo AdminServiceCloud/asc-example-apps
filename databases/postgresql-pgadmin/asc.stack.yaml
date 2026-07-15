@@ -4,7 +4,7 @@
 # connection steps after both apps are running.
 # Schema: https://registry.adminservice.cloud/schema/asc.stack.schema.json
 name: postgresql-pgadmin
-version: 1.0.0
+version: 1.6.0
 title: PostgreSQL + pgAdmin
 description: "PostgreSQL paired with pgAdmin, a web-based administration UI"
 category: databases

@@ -5,7 +5,7 @@
 # current upstream build.
 # Schema: https://registry.adminservice.cloud/schema/asc.schema.json
 name: nginx-utility
-version: 1.0.1
+version: 1.6.0
 type: utility
 title: Nginx (utility)
 description: "Nginx as an on-demand Docker utility: config linting and ad-hoc static serving, no persistent service"

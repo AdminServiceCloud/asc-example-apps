@@ -1,7 +1,7 @@
 # Ollama paired with Open WebUI, a ChatGPT-style chat interface on top of it.
 # Schema: https://registry.adminservice.cloud/schema/asc.stack.schema.json
 name: ollama-openwebui
-version: 1.0.0
+version: 1.6.0
 title: Ollama + Open WebUI
 description: "Ollama paired with Open WebUI, a ChatGPT-style chat interface"
 category: ai

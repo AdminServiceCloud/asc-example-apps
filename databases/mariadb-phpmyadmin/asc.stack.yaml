@@ -3,7 +3,7 @@
 # Docker network to find the database — see the README.
 # Schema: https://registry.adminservice.cloud/schema/asc.stack.schema.json
 name: mariadb-phpmyadmin
-version: 1.0.0
+version: 1.6.0
 title: MariaDB + phpMyAdmin
 description: "MariaDB paired with phpMyAdmin, a web-based administration UI"
 category: databases
