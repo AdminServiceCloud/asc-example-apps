@@ -55,3 +55,7 @@ More details in [📦 package-manager](../asc-daemon/docs/package-manager.md).
 - [🎯 ROADMAP](../asc-platform/ROADMAP.md) — examples task: `REG-002`
 
 > ⚠️ The `old/` directory holds earlier work and is kept for reference only.
+
+## 📄 License
+
+MIT — see [LICENSE](LICENSE). `asc install` shows this license and asks for acceptance once per repository before installing any example from here.
