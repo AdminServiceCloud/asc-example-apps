@@ -1,0 +1,25 @@
+# LM Studio, headless (llmster): the daemon core of LM Studio without its
+# desktop GUI, exposing an OpenAI-compatible API. Official image, currently
+# a "Technical Preview" with CPU-only support on x86 — no numbered release
+# tags exist upstream yet, so :cpu (the closest thing to a stable channel)
+# is what's pinned here instead of a version number.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: lm-studio
+version: 0.1.0
+type: docker
+title: LM Studio
+description: "Headless LM Studio (llmster): local LLM runtime with an OpenAI-compatible API"
+category: ai
+settings: ./asc.settings.yaml
+
+runtime:
+  image: lmstudio/llmster-preview:cpu
+
+requirements:
+  ram: 8G
+  disk: 20G
+  cpu: 4
+
+healthcheck:
+  http: /v1/models
+  interval: 30s

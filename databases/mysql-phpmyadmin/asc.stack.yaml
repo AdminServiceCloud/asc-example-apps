@@ -1,0 +1,15 @@
+# MySQL paired with phpMyAdmin. phpMyAdmin runs in "arbitrary server" mode
+# (PMA_ARBITRARY) so it asks for a host at login instead of needing a shared
+# Docker network to find the database — see the README.
+# Schema: https://registry.adminservice.cloud/schema/asc.stack.schema.json
+name: mysql-phpmyadmin
+version: 1.0.0
+title: MySQL + phpMyAdmin
+description: "MySQL paired with phpMyAdmin, a web-based administration UI"
+category: databases
+
+apps:
+  - name: mysql
+    path: ./db
+  - name: phpmyadmin
+    path: ./phpmyadmin

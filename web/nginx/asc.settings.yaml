@@ -1,0 +1,57 @@
+# User-facing settings for the nginx package. The platform UI renders a form
+# from this file; the CLI asks interactively; silent installs take the defaults.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: timezone
+    type: string
+    title: "Time zone"
+    description: "Container time zone (log timestamps)"
+    default: "UTC"
+    env: TZ
+
+  - key: http_port
+    type: ports
+    title: "HTTP port"
+    description: "Host port published for plain HTTP traffic"
+    default: [80]
+    limits: { min: 1, max: 65535 }
+    env: NGINX_HTTP_PORT
+    protocol: tcp
+
+  - key: https_port
+    type: ports
+    title: "HTTPS port"
+    description: "Host port published for TLS traffic"
+    default: [443]
+    limits: { min: 1, max: 65535 }
+    env: NGINX_HTTPS_PORT
+    protocol: tcp
+
+  - key: worker_processes
+    type: enum
+    title: "Worker processes"
+    description: "nginx worker_processes directive"
+    values: [auto, "1", "2", "4"]
+    default: auto
+    env: NGINX_WORKER_PROCESSES
+
+  - key: conf_d
+    type: volumes
+    title: "Virtual host configuration"
+    default: [/etc/nginx/conf.d:conf]
+
+  - key: html
+    type: volumes
+    title: "Static web content"
+    default: [/usr/share/nginx/html:html]
+
+  - key: logs
+    type: volumes
+    title: "Access and error logs"
+    default: [/var/log/nginx:logs]
+
+# Resource limits applied to the container at install/upgrade time.
+quota:
+  max_cpu: 1
+  max_ram: 256M
+  max_disk: 1G

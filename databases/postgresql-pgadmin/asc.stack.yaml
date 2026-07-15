@@ -1,0 +1,16 @@
+# PostgreSQL paired with pgAdmin (a web-based administration UI). ASC has no
+# shared Docker network between stack apps yet, so pgAdmin reaches the
+# database over its published host port — see the README for the exact
+# connection steps after both apps are running.
+# Schema: https://registry.adminservice.cloud/schema/asc.stack.schema.json
+name: postgresql-pgadmin
+version: 1.0.0
+title: PostgreSQL + pgAdmin
+description: "PostgreSQL paired with pgAdmin, a web-based administration UI"
+category: databases
+
+apps:
+  - name: postgresql
+    path: ./db
+  - name: pgadmin
+    path: ./pgadmin

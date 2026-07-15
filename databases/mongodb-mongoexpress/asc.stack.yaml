@@ -1,0 +1,13 @@
+# MongoDB paired with mongo-express, a web-based administration UI.
+# Schema: https://registry.adminservice.cloud/schema/asc.stack.schema.json
+name: mongodb-mongoexpress
+version: 1.0.0
+title: MongoDB + mongo-express
+description: "MongoDB paired with mongo-express, a web-based administration UI"
+category: databases
+
+apps:
+  - name: mongodb
+    path: ./db
+  - name: mongoexpress
+    path: ./mongoexpress

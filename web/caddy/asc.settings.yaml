@@ -1,0 +1,56 @@
+# Caddy is configured through a mounted Caddyfile, not env vars — domain and
+# ACME email are exposed here only because Caddy substitutes {$VAR} inside
+# the Caddyfile from the container's environment; your own Caddyfile has to
+# reference {$DOMAIN}/{$ACME_EMAIL} for these to have any effect.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: domain
+    type: string
+    title: "Domain (for your Caddyfile)"
+    description: "Available inside the Caddyfile as {$DOMAIN}; has no effect unless your Caddyfile references it"
+    required: false
+    env: DOMAIN
+
+  - key: acme_email
+    type: string
+    title: "ACME/Let's Encrypt email (for your Caddyfile)"
+    description: "Available inside the Caddyfile as {$ACME_EMAIL}; has no effect unless your Caddyfile references it"
+    required: false
+    env: ACME_EMAIL
+
+  - key: http_port
+    type: ports
+    title: "HTTP port"
+    default: [80]
+    limits: { min: 1, max: 65535 }
+    protocol: tcp
+
+  - key: https_port
+    type: ports
+    title: "HTTPS port"
+    description: "TCP for HTTP/1.1+HTTP/2, UDP for HTTP/3 (QUIC) — both on the same port"
+    default: [443]
+    limits: { min: 1, max: 65535 }
+    protocol: both
+
+  - key: caddyfile
+    type: volumes
+    title: "Caddyfile volume"
+    description: "Holds the Caddyfile (or a caddy.json); the image's default Caddyfile serves a placeholder page until you replace it"
+    default: [/etc/caddy:caddyfile]
+
+  - key: certs
+    type: volumes
+    title: "TLS state volume"
+    description: "ACME account and issued certificates — must persist across restarts to avoid Let's Encrypt rate limits"
+    default: [/data:certs]
+
+  - key: config
+    type: volumes
+    title: "Autosaved config volume"
+    default: [/config:caddyconfig]
+
+quota:
+  max_cpu: 1
+  max_ram: 256M
+  max_disk: 1G

@@ -1,0 +1,17 @@
+# Redis Commander, the admin-UI half of the redis-commander stack.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: commander
+version: 0.9.1
+type: docker
+title: Redis Commander
+description: "Web-based administration UI for Redis"
+category: databases
+settings: ./asc.settings.yaml
+
+runtime:
+  image: rediscommander/redis-commander:0.9.1
+
+requirements:
+  ram: 128M
+  disk: 128M
+  cpu: 0.5

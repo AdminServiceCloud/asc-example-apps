@@ -1,0 +1,41 @@
+# Same shape as the standalone mongodb example (../../mongodb), except
+# root_username/root_password are required here — mongo-express needs
+# working credentials to connect.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: root_username
+    type: string
+    title: "Root username"
+    required: true
+    env: MONGO_INITDB_ROOT_USERNAME
+
+  - key: root_password
+    type: secret
+    title: "Root password"
+    required: true
+    env: MONGO_INITDB_ROOT_PASSWORD
+
+  - key: database
+    type: string
+    title: "Init database"
+    description: "Database that docker-entrypoint-initdb.d scripts run against; has no effect without such scripts (MONGO_INITDB_DATABASE)"
+    required: false
+    env: MONGO_INITDB_DATABASE
+
+  - key: port
+    type: ports
+    title: "Port"
+    description: "Published on the host so mongo-express (and anything else) can reach this database"
+    default: [27017]
+    limits: { min: 1024, max: 65535 }
+    protocol: tcp
+
+  - key: data
+    type: volumes
+    title: "Data volume"
+    default: [/data/db]
+
+quota:
+  max_cpu: 1
+  max_ram: 1G
+  max_disk: 10G

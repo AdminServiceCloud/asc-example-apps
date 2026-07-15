@@ -1,0 +1,17 @@
+# phpMyAdmin, the admin-UI half of the mariadb-phpmyadmin stack.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: phpmyadmin
+version: 5.2.1
+type: docker
+title: phpMyAdmin
+description: "Web-based administration UI for MySQL/MariaDB"
+category: databases
+settings: ./asc.settings.yaml
+
+runtime:
+  image: phpmyadmin:5.2.1
+
+requirements:
+  ram: 256M
+  disk: 256M
+  cpu: 0.5

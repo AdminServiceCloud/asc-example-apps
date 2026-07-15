@@ -1,0 +1,56 @@
+# User-facing settings of mongo-express, mapped to the environment variables
+# documented by the official mongo-express image.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: db_host
+    type: string
+    title: "Database host"
+    description: "Host/address where the mongodb app's port is published — ASC does not yet share a Docker network between stack apps (ME_CONFIG_MONGODB_SERVER)"
+    required: true
+    env: ME_CONFIG_MONGODB_SERVER
+
+  - key: db_port
+    type: number
+    title: "Database port"
+    default: 27017
+    limits: { min: 1, max: 65535 }
+    env: ME_CONFIG_MONGODB_PORT
+
+  - key: db_admin_username
+    type: string
+    title: "Database root username"
+    description: "The mongodb app's root_username (ME_CONFIG_MONGODB_ADMINUSERNAME)"
+    required: true
+    env: ME_CONFIG_MONGODB_ADMINUSERNAME
+
+  - key: db_admin_password
+    type: secret
+    title: "Database root password"
+    description: "The mongodb app's root_password (ME_CONFIG_MONGODB_ADMINPASSWORD)"
+    required: true
+    env: ME_CONFIG_MONGODB_ADMINPASSWORD
+
+  - key: ui_username
+    type: string
+    title: "Web UI login"
+    description: "HTTP basic auth for mongo-express itself, not the database (ME_CONFIG_BASICAUTH_USERNAME)"
+    default: "admin"
+    env: ME_CONFIG_BASICAUTH_USERNAME
+
+  - key: ui_password
+    type: secret
+    title: "Web UI password"
+    required: true
+    env: ME_CONFIG_BASICAUTH_PASSWORD
+
+  - key: http_port
+    type: ports
+    title: "Web UI port"
+    default: [8081]
+    limits: { min: 1024, max: 65535 }
+    protocol: tcp
+
+quota:
+  max_cpu: 0.5
+  max_ram: 256M
+  max_disk: 512M

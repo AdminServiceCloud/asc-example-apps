@@ -1,0 +1,17 @@
+# Open WebUI, the chat-UI half of the ollama-openwebui stack.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: openwebui
+version: 0.4.8
+type: docker
+title: Open WebUI
+description: "ChatGPT-style web chat interface for Ollama and other LLM backends"
+category: ai
+settings: ./asc.settings.yaml
+
+runtime:
+  image: ghcr.io/open-webui/open-webui:0.4.8
+
+requirements:
+  ram: 1G
+  disk: 2G
+  cpu: 1

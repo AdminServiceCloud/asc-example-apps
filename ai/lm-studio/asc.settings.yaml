@@ -1,0 +1,23 @@
+# llmster (headless LM Studio) is intentionally almost zero-config: models,
+# server config and chat history all live under one volume, and the only
+# documented runtime option is which port the API listens on.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: port
+    type: ports
+    title: "API port"
+    description: "OpenAI-compatible REST API (/v1/chat/completions, /v1/completions, /v1/embeddings, /v1/models)"
+    default: [1234]
+    limits: { min: 1024, max: 65535 }
+    protocol: tcp
+
+  - key: data
+    type: volumes
+    title: "Data volume"
+    description: "Downloaded models, server config and conversation history — everything the image persists"
+    default: [/data]
+
+quota:
+  max_cpu: 4
+  max_ram: 16G
+  max_disk: 40G

@@ -1,0 +1,50 @@
+# User-facing settings of one MariaDB instance, mapped to the environment
+# variables documented by the official mariadb image (MARIADB_* — the
+# modern names; the image also accepts the older MYSQL_* aliases).
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: root_password
+    type: secret
+    title: "Root password"
+    required: true
+    env: MARIADB_ROOT_PASSWORD
+
+  - key: database
+    type: string
+    title: "Default database"
+    description: "Created on first start if set (MARIADB_DATABASE)"
+    required: false
+    limits: { max_length: 64 }
+    env: MARIADB_DATABASE
+
+  - key: username
+    type: string
+    title: "Additional user"
+    description: "Created on first start alongside root, granted full access to the default database (MARIADB_USER)"
+    required: false
+    limits: { max_length: 32 }
+    env: MARIADB_USER
+
+  - key: password
+    type: secret
+    title: "Additional user password"
+    description: "Required if 'username' is set (MARIADB_PASSWORD)"
+    required: false
+    env: MARIADB_PASSWORD
+
+  - key: port
+    type: ports
+    title: "Port"
+    default: [3306]
+    limits: { min: 1024, max: 65535 }
+    protocol: tcp
+
+  - key: data
+    type: volumes
+    title: "Data volume"
+    default: [/var/lib/mysql]
+
+quota:
+  max_cpu: 1
+  max_ram: 1G
+  max_disk: 10G

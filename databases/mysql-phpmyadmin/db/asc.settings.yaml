@@ -1,0 +1,49 @@
+# Same shape as the standalone mysql example — see ../../mysql.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: root_password
+    type: secret
+    title: "Root password"
+    required: true
+    env: MYSQL_ROOT_PASSWORD
+
+  - key: database
+    type: string
+    title: "Default database"
+    description: "Created on first start if set (MYSQL_DATABASE)"
+    required: false
+    limits: { max_length: 64 }
+    env: MYSQL_DATABASE
+
+  - key: username
+    type: string
+    title: "Additional user"
+    description: "Created on first start alongside root, granted full access to the default database (MYSQL_USER)"
+    required: false
+    limits: { max_length: 32 }
+    env: MYSQL_USER
+
+  - key: password
+    type: secret
+    title: "Additional user password"
+    description: "Required if 'username' is set (MYSQL_PASSWORD)"
+    required: false
+    env: MYSQL_PASSWORD
+
+  - key: port
+    type: ports
+    title: "Port"
+    description: "Published on the host so phpMyAdmin (and anything else) can reach this database"
+    default: [3306]
+    limits: { min: 1024, max: 65535 }
+    protocol: tcp
+
+  - key: data
+    type: volumes
+    title: "Data volume"
+    default: [/var/lib/mysql]
+
+quota:
+  max_cpu: 1
+  max_ram: 1G
+  max_disk: 10G

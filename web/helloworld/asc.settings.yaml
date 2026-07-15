@@ -1,0 +1,9 @@
+# The one setting this minimal package needs: the published port.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: http_port
+    type: ports
+    title: "HTTP port"
+    default: [8000]
+    limits: { min: 1, max: 65535 }
+    protocol: tcp

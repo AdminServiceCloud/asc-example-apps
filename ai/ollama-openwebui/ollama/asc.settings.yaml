@@ -1,0 +1,41 @@
+# Same shape as the standalone ollama example — see ../../ollama.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: keep_alive
+    type: string
+    title: "Model keep-alive"
+    description: "How long a loaded model stays in memory after its last request (OLLAMA_KEEP_ALIVE)"
+    default: "5m"
+    env: OLLAMA_KEEP_ALIVE
+
+  - key: max_loaded_models
+    type: number
+    title: "Max loaded models"
+    default: 1
+    limits: { min: 1, max: 16 }
+    env: OLLAMA_MAX_LOADED_MODELS
+
+  - key: num_parallel
+    type: number
+    title: "Parallel requests per model"
+    default: 1
+    limits: { min: 1, max: 16 }
+    env: OLLAMA_NUM_PARALLEL
+
+  - key: port
+    type: ports
+    title: "API port"
+    description: "Published on the host so Open WebUI (and anything else) can reach this Ollama instance"
+    default: [11434]
+    limits: { min: 1024, max: 65535 }
+    protocol: tcp
+
+  - key: models
+    type: volumes
+    title: "Models volume"
+    default: [/root/.ollama]
+
+quota:
+  max_cpu: 4
+  max_ram: 16G
+  max_disk: 40G

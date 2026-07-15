@@ -1,0 +1,15 @@
+# MariaDB paired with phpMyAdmin. phpMyAdmin runs in "arbitrary server" mode
+# (PMA_ARBITRARY) so it asks for a host at login instead of needing a shared
+# Docker network to find the database — see the README.
+# Schema: https://registry.adminservice.cloud/schema/asc.stack.schema.json
+name: mariadb-phpmyadmin
+version: 1.0.0
+title: MariaDB + phpMyAdmin
+description: "MariaDB paired with phpMyAdmin, a web-based administration UI"
+category: databases
+
+apps:
+  - name: mariadb
+    path: ./db
+  - name: phpmyadmin
+    path: ./phpmyadmin

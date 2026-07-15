@@ -1,0 +1,48 @@
+# User-facing settings of one PostgreSQL instance, mapped to the environment
+# variables documented by the official postgres image.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: username
+    type: string
+    title: "Superuser name"
+    default: "postgres"
+    limits: { max_length: 63, pattern: "^[a-zA-Z_][a-zA-Z0-9_]*$" }
+    env: POSTGRES_USER
+
+  - key: password
+    type: secret
+    title: "Superuser password"
+    required: true
+    env: POSTGRES_PASSWORD
+
+  - key: database
+    type: string
+    title: "Default database"
+    description: "Created on first start; leave empty to default to the superuser name (POSTGRES_DB)"
+    required: false
+    limits: { max_length: 63 }
+    env: POSTGRES_DB
+
+  - key: data_dir
+    type: string
+    title: "Data directory (advanced)"
+    description: "PGDATA inside the container; a subdirectory of the mount avoids initdb failing on a non-empty mount point (e.g. a lost+found folder)"
+    default: "/var/lib/postgresql/data/pgdata"
+    env: PGDATA
+
+  - key: port
+    type: ports
+    title: "Port"
+    default: [5432]
+    limits: { min: 1024, max: 65535 }
+    protocol: tcp
+
+  - key: data
+    type: volumes
+    title: "Data volume"
+    default: [/var/lib/postgresql/data]
+
+quota:
+  max_cpu: 1
+  max_ram: 1G
+  max_disk: 10G

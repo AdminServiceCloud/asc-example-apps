@@ -1,0 +1,22 @@
+# GTA V multiplayer dedicated server (FiveM): the image bundles FXServer and
+# txAdmin (the server's own web-based management console, built by CitizenFX).
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: gta5
+version: 1.0.0
+type: docker
+title: GTA 5 server (FiveM)
+description: "FiveM dedicated server for GTA V multiplayer, managed through its bundled txAdmin web console"
+category: game-servers
+settings: ./asc.settings.yaml
+
+runtime:
+  image: spritsail/fivem:stable
+
+requirements:
+  ram: 4G
+  disk: 8G   # resources/mods placed under the server data volume
+  cpu: 2
+
+healthcheck:
+  http: /
+  interval: 30s

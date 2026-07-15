@@ -1,0 +1,42 @@
+# User-facing settings of Open WebUI, mapped to the environment variables
+# documented by the official open-webui image.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: ollama_base_url
+    type: string
+    title: "Ollama API URL"
+    description: "Host/address where the ollama app's API port is published — ASC does not yet share a Docker network between stack apps, e.g. http://<host-address>:11434 (OLLAMA_BASE_URL)"
+    required: true
+    env: OLLAMA_BASE_URL
+
+  - key: secret_key
+    type: secret
+    title: "Session secret key"
+    description: "Signs login sessions; any random string (WEBUI_SECRET_KEY)"
+    required: true
+    env: WEBUI_SECRET_KEY
+
+  - key: signup_enabled
+    type: boolean
+    title: "Allow self-service sign-up"
+    description: "The first account created is always an admin regardless of this setting (ENABLE_SIGNUP)"
+    default: true
+    env: ENABLE_SIGNUP
+
+  - key: http_port
+    type: ports
+    title: "Web UI port"
+    default: [8080]
+    limits: { min: 1024, max: 65535 }
+    protocol: tcp
+
+  - key: data
+    type: volumes
+    title: "Data volume"
+    description: "Chat history, accounts and settings"
+    default: [/app/backend/data]
+
+quota:
+  max_cpu: 1
+  max_ram: 2G
+  max_disk: 5G

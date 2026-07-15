@@ -1,0 +1,43 @@
+# User-facing settings of Ollama, mapped to the environment variables
+# documented at https://github.com/ollama/ollama/blob/main/docs/faq.md.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: keep_alive
+    type: string
+    title: "Model keep-alive"
+    description: "How long a loaded model stays in memory after its last request, e.g. 5m, 24h, or -1 to never unload (OLLAMA_KEEP_ALIVE)"
+    default: "5m"
+    env: OLLAMA_KEEP_ALIVE
+
+  - key: max_loaded_models
+    type: number
+    title: "Max loaded models"
+    description: "How many different models can be kept in memory at once (OLLAMA_MAX_LOADED_MODELS)"
+    default: 1
+    limits: { min: 1, max: 16 }
+    env: OLLAMA_MAX_LOADED_MODELS
+
+  - key: num_parallel
+    type: number
+    title: "Parallel requests per model"
+    default: 1
+    limits: { min: 1, max: 16 }
+    env: OLLAMA_NUM_PARALLEL
+
+  - key: port
+    type: ports
+    title: "API port"
+    default: [11434]
+    limits: { min: 1024, max: 65535 }
+    protocol: tcp
+
+  - key: models
+    type: volumes
+    title: "Models volume"
+    description: "Pulled model weights; can grow to tens of GB depending on which models you pull"
+    default: [/root/.ollama]
+
+quota:
+  max_cpu: 4
+  max_ram: 16G
+  max_disk: 40G

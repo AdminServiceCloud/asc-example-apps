@@ -1,0 +1,22 @@
+# MongoDB as a long-running database (type: docker), pinned to the official
+# mongo image at a specific upstream release.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: mongodb
+version: 8.0.0
+type: docker
+title: MongoDB
+description: "Document-oriented NoSQL database, pinned to an upstream release"
+category: databases
+settings: ./asc.settings.yaml
+
+runtime:
+  image: mongo:8.0
+
+requirements:
+  ram: 512M
+  disk: 5G
+  cpu: 1
+
+healthcheck:
+  command: "mongosh --quiet --eval 'db.adminCommand(\"ping\")'"
+  interval: 30s

@@ -1,0 +1,21 @@
+# PostgreSQL, the database half of the postgresql-pgadmin stack.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: postgresql
+version: 16.3.0
+type: docker
+title: PostgreSQL
+description: "Advanced open source relational database, pinned to an upstream release"
+category: databases
+settings: ./asc.settings.yaml
+
+runtime:
+  image: postgres:16.3
+
+requirements:
+  ram: 512M
+  disk: 5G
+  cpu: 1
+
+healthcheck:
+  command: "pg_isready"
+  interval: 30s

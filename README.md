@@ -6,13 +6,54 @@ Example applications and `asc.yaml` manifests for [asc-daemon](../asc-daemon): t
 
 ## 📂 What's inside
 
+Examples are grouped in folders that match their [registry](../registry) category, so `<category>/<package>` on disk lines up with the `path` a registry entry points at.
+
+### 🌐 web/
+
 | Example | Description |
 |---|---|
-| `helloworld/` | 👋 Minimal Docker application: a single `asc.yaml` |
-| `nginx/` | 🌐 Nginx web server pinned to an upstream release, with `asc.settings.yaml` (settings, quota) |
-| `nginx-utility/` | 🧰 Nginx as an on-demand Docker utility (`type: utility`), no persistent service |
-| `cs2/` | 🎮 Counter-Strike 2 stack (`asc.stack.yaml`): dedicated server with the game installation in a private per-instance volume |
-| `7dtd/` | 🧟 7 Days to Die dedicated server: every image env var mapped to a setting, including an `enum` with `allow_custom` |
+| `web/helloworld/` | 👋 Minimal Docker application: `asc.yaml` + a one-setting `asc.settings.yaml` |
+| `web/nginx/` | 🌐 Nginx web server pinned to an upstream release, with `asc.settings.yaml` (ports, volumes, quota) |
+| `web/caddy/` | 🕸️ Caddy: automatic HTTPS, `{$VAR}` substitution inside a mounted Caddyfile |
+| `web/traefik/` | 🚦 Traefik: reverse proxy configured via `TRAEFIK_*` env vars instead of Docker-label discovery |
+
+### 🔧 system-utilities/
+
+| Example | Description |
+|---|---|
+| `system-utilities/nginx-utility/` | 🧰 Nginx as an on-demand Docker utility (`type: utility`), no persistent service |
+| `system-utilities/portainer/` | 🐳 Docker management UI; mounts the host's Docker socket as an absolute-path volume |
+
+### 📈 monitoring/
+
+| Example | Description |
+|---|---|
+| `monitoring/uptime-kuma/` | 🟢 Uptime monitoring with a public status page; almost no env-based settings |
+| `monitoring/grafana/` | 📊 Dashboards, `GF_<SECTION>_<KEY>` env-var convention |
+| `monitoring/server-speedtest/` | 🚀 Self-hosted network speed test; a 100-entry `type: ports` WebRTC range |
+
+### 🧠 ai/
+
+| Example | Description |
+|---|---|
+| `ai/ollama/` | 🦙 Local LLM runtime (CPU-only under ASC today — no GPU passthrough yet) |
+| `ai/ollama-openwebui/` | 💬 Ollama paired with Open WebUI, a ChatGPT-style chat interface |
+| `ai/lm-studio/` | 🖥️ Headless LM Studio (`llmster`), OpenAI-compatible API; a channel tag (`:cpu`) pinned instead of a version, since upstream has none yet |
+
+### 🎮 gameservers/
+
+| Example | Description |
+|---|---|
+| `gameservers/cs2/` | 🎮 Counter-Strike 2 stack (`asc.stack.yaml`): dedicated server with the game installation in a private per-instance volume |
+| `gameservers/7dtd/` | 🧟 7 Days to Die dedicated server: every image env var mapped to a setting, including an `enum` with `allow_custom` |
+| `gameservers/gta5/` | 🚔 GTA 5 server (FiveM): FXServer + its bundled txAdmin web console |
+
+### 🗄️ databases/
+
+| Example | Description |
+|---|---|
+| `databases/postgresql/`, `mysql/`, `mariadb/`, `mongodb/`, `redis/` | 🗄️ Each database standalone, pinned to an upstream release, official image env vars mapped 1:1 |
+| `databases/postgresql-pgadmin/`, `mysql-phpmyadmin/`, `mariadb-phpmyadmin/`, `mongodb-mongoexpress/`, `redis-commander/` | 🔧 Each database paired with a web admin UI as a two-app `asc.stack.yaml` |
 
 ## 🚀 How to try
 

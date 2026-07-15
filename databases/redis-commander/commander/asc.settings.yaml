@@ -1,0 +1,49 @@
+# User-facing settings of Redis Commander, mapped to the environment
+# variables documented by the official rediscommander/redis-commander image.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: db_host
+    type: string
+    title: "Database host"
+    description: "Host/address where the redis app's port is published — ASC does not yet share a Docker network between stack apps (REDIS_HOST)"
+    required: true
+    env: REDIS_HOST
+
+  - key: db_port
+    type: number
+    title: "Database port"
+    default: 6379
+    limits: { min: 1, max: 65535 }
+    env: REDIS_PORT
+
+  - key: db_password
+    type: secret
+    title: "Database password"
+    description: "The redis app's password (REDIS_PASSWORD)"
+    required: true
+    env: REDIS_PASSWORD
+
+  - key: ui_username
+    type: string
+    title: "Web UI login"
+    description: "HTTP basic auth in front of Redis Commander itself, not the database (HTTP_USER)"
+    default: "admin"
+    env: HTTP_USER
+
+  - key: ui_password
+    type: secret
+    title: "Web UI password"
+    required: true
+    env: HTTP_PASSWORD
+
+  - key: http_port
+    type: ports
+    title: "Web UI port"
+    default: [8081]
+    limits: { min: 1024, max: 65535 }
+    protocol: tcp
+
+quota:
+  max_cpu: 0.5
+  max_ram: 256M
+  max_disk: 256M

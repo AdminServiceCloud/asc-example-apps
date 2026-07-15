@@ -1,0 +1,21 @@
+# MariaDB, the database half of the mariadb-phpmyadmin stack.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: mariadb
+version: 11.4.0
+type: docker
+title: MariaDB
+description: "MySQL-compatible open source relational database, pinned to an upstream LTS release"
+category: databases
+settings: ./asc.settings.yaml
+
+runtime:
+  image: mariadb:11.4
+
+requirements:
+  ram: 512M
+  disk: 5G
+  cpu: 1
+
+healthcheck:
+  command: "healthcheck.sh --connect"
+  interval: 30s

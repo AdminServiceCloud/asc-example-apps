@@ -1,0 +1,22 @@
+# Redis as a long-running cache/store (type: docker), pinned to the official
+# redis image at a specific upstream release.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: redis
+version: 7.2.0
+type: docker
+title: Redis
+description: "In-memory data store, cache and message broker, pinned to an upstream release"
+category: databases
+settings: ./asc.settings.yaml
+
+runtime:
+  image: redis:7.2
+
+requirements:
+  ram: 256M
+  disk: 1G
+  cpu: 0.5
+
+healthcheck:
+  command: "redis-cli ping"
+  interval: 30s

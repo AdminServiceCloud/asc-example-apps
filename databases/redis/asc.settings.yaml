@@ -1,0 +1,58 @@
+# User-facing settings of one Redis instance. The official redis image has
+# no env-based configuration (Redis has no built-in support for it) — every
+# setting here is threaded into the launch command via start_command
+# (DMN-018), which replaces the image's default `redis-server` invocation.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: password
+    type: secret
+    title: "Password"
+    description: "Passed as --requirepass; required since Redis authentication has no env-var equivalent"
+    required: true
+    env: REDIS_PASSWORD
+
+  - key: append_only
+    type: enum
+    title: "Append-only persistence (AOF)"
+    values: [yes, no]
+    default: yes
+    env: REDIS_APPENDONLY
+
+  - key: maxmemory
+    type: string
+    title: "Max memory"
+    description: "e.g. 256mb, 1gb (--maxmemory)"
+    default: "256mb"
+    env: REDIS_MAXMEMORY
+
+  - key: maxmemory_policy
+    type: enum
+    title: "Eviction policy"
+    description: "Applied once maxmemory is reached (--maxmemory-policy)"
+    values: [noeviction, allkeys-lru, allkeys-lfu, volatile-lru, volatile-lfu, volatile-ttl, volatile-random, allkeys-random]
+    default: allkeys-lru
+    env: REDIS_MAXMEMORY_POLICY
+
+  - key: port
+    type: ports
+    title: "Port"
+    default: [6379]
+    limits: { min: 1024, max: 65535 }
+    env: REDIS_PORT
+    protocol: tcp
+
+  - key: data
+    type: volumes
+    title: "Data volume"
+    default: [/data]
+
+# The image's own entrypoint is trivial (just a redis-server arg-detection
+# convenience, no first-run initialization to preserve), so replacing it
+# outright is safe — unlike postgres/mysql/mongo, where the entrypoint runs
+# real first-start setup and must be left alone.
+start_command: "redis-server --requirepass ${REDIS_PASSWORD} --appendonly ${REDIS_APPENDONLY} --maxmemory ${REDIS_MAXMEMORY} --maxmemory-policy ${REDIS_MAXMEMORY_POLICY} --port ${REDIS_PORT}"
+
+quota:
+  max_cpu: 1
+  max_ram: 512M
+  max_disk: 2G

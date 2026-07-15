@@ -1,0 +1,52 @@
+# Same shape as the standalone redis example — see ../../redis.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: password
+    type: secret
+    title: "Password"
+    description: "Passed as --requirepass; required since Redis authentication has no env-var equivalent"
+    required: true
+    env: REDIS_PASSWORD
+
+  - key: append_only
+    type: enum
+    title: "Append-only persistence (AOF)"
+    values: [yes, no]
+    default: yes
+    env: REDIS_APPENDONLY
+
+  - key: maxmemory
+    type: string
+    title: "Max memory"
+    description: "e.g. 256mb, 1gb (--maxmemory)"
+    default: "256mb"
+    env: REDIS_MAXMEMORY
+
+  - key: maxmemory_policy
+    type: enum
+    title: "Eviction policy"
+    description: "Applied once maxmemory is reached (--maxmemory-policy)"
+    values: [noeviction, allkeys-lru, allkeys-lfu, volatile-lru, volatile-lfu, volatile-ttl, volatile-random, allkeys-random]
+    default: allkeys-lru
+    env: REDIS_MAXMEMORY_POLICY
+
+  - key: port
+    type: ports
+    title: "Port"
+    description: "Published on the host so Redis Commander (and anything else) can reach this instance"
+    default: [6379]
+    limits: { min: 1024, max: 65535 }
+    env: REDIS_PORT
+    protocol: tcp
+
+  - key: data
+    type: volumes
+    title: "Data volume"
+    default: [/data]
+
+start_command: "redis-server --requirepass ${REDIS_PASSWORD} --appendonly ${REDIS_APPENDONLY} --maxmemory ${REDIS_MAXMEMORY} --maxmemory-policy ${REDIS_MAXMEMORY_POLICY} --port ${REDIS_PORT}"
+
+quota:
+  max_cpu: 1
+  max_ram: 512M
+  max_disk: 2G

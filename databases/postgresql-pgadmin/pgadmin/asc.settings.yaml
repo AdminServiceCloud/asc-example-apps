@@ -1,0 +1,36 @@
+# User-facing settings of pgAdmin, mapped to the environment variables
+# documented by the official dpage/pgadmin4 image.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: admin_email
+    type: string
+    title: "Admin email"
+    description: "Login for the pgAdmin web UI (PGADMIN_DEFAULT_EMAIL); any well-formed address works, it is not verified"
+    required: true
+    limits: { pattern: "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$" }
+    env: PGADMIN_DEFAULT_EMAIL
+
+  - key: admin_password
+    type: secret
+    title: "Admin password"
+    required: true
+    env: PGADMIN_DEFAULT_PASSWORD
+
+  - key: http_port
+    type: ports
+    title: "Web UI port"
+    default: [5050]
+    limits: { min: 1024, max: 65535 }
+    env: PGADMIN_LISTEN_PORT
+    protocol: tcp
+
+  - key: data
+    type: volumes
+    title: "pgAdmin data volume"
+    description: "Saved server connections, sessions and preferences"
+    default: [/var/lib/pgadmin]
+
+quota:
+  max_cpu: 0.5
+  max_ram: 512M
+  max_disk: 1G

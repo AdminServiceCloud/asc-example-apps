@@ -1,0 +1,36 @@
+# User-facing settings of phpMyAdmin, mapped to the environment variables
+# documented by the official phpmyadmin image.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: arbitrary_server
+    type: boolean
+    title: "Ask for a server at login"
+    description: "Lets the login page connect to any host/port instead of one fixed database (PMA_ARBITRARY); the way to reach a sibling app's database without a shared Docker network"
+    default: true
+    env: PMA_ARBITRARY
+
+  - key: fixed_host
+    type: string
+    title: "Fixed database host (advanced)"
+    description: "Only used when 'arbitrary_server' is off (PMA_HOST); the host/address where the database's port is published"
+    required: false
+    env: PMA_HOST
+
+  - key: upload_limit
+    type: string
+    title: "Import upload limit"
+    description: "Max size of a SQL file uploaded for import, e.g. 64M, 1G (UPLOAD_LIMIT)"
+    default: "64M"
+    env: UPLOAD_LIMIT
+
+  - key: http_port
+    type: ports
+    title: "Web UI port"
+    default: [8080]
+    limits: { min: 1024, max: 65535 }
+    protocol: tcp
+
+quota:
+  max_cpu: 0.5
+  max_ram: 256M
+  max_disk: 512M

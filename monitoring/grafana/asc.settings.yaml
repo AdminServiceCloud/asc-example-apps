@@ -1,0 +1,48 @@
+# User-facing settings of Grafana, mapped to the GF_<section>_<key>
+# environment variables documented by the official grafana image (every
+# grafana.ini setting can be overridden this way).
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: admin_user
+    type: string
+    title: "Admin username"
+    default: "admin"
+    env: GF_SECURITY_ADMIN_USER
+
+  - key: admin_password
+    type: secret
+    title: "Admin password"
+    required: true
+    env: GF_SECURITY_ADMIN_PASSWORD
+
+  - key: allow_sign_up
+    type: boolean
+    title: "Allow self-service sign-up"
+    default: false
+    env: GF_USERS_ALLOW_SIGN_UP
+
+  - key: root_url
+    type: string
+    title: "Root URL (advanced)"
+    description: "Full external URL when Grafana sits behind a reverse proxy, e.g. https://grafana.example.com (GF_SERVER_ROOT_URL)"
+    required: false
+    env: GF_SERVER_ROOT_URL
+
+  - key: http_port
+    type: ports
+    title: "Web UI port"
+    default: [3000]
+    limits: { min: 1024, max: 65535 }
+    env: GF_SERVER_HTTP_PORT
+    protocol: tcp
+
+  - key: data
+    type: volumes
+    title: "Data volume"
+    description: "Dashboards database, installed plugins, session data"
+    default: [/var/lib/grafana]
+
+quota:
+  max_cpu: 1
+  max_ram: 1G
+  max_disk: 5G

@@ -1,0 +1,21 @@
+# Uptime Kuma: self-hosted uptime monitoring and status pages.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: uptime-kuma
+version: 1.23.16
+type: docker
+title: Uptime Kuma
+description: "Self-hosted uptime monitoring with notifications and public status pages"
+category: monitoring
+settings: ./asc.settings.yaml
+
+runtime:
+  image: louislam/uptime-kuma:1.23.16
+
+requirements:
+  ram: 256M
+  disk: 1G
+  cpu: 0.5
+
+healthcheck:
+  http: /
+  interval: 30s

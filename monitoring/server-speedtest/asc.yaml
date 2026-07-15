@@ -1,0 +1,22 @@
+# Server Speedtest: self-hosted network speed test (download, upload,
+# latency, jitter, packet loss) measured against this server itself.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: server-speedtest
+version: 1.0.0
+type: docker
+title: Server Speedtest
+description: "Self-hosted network speed test against this server: download, upload, latency, jitter, packet loss"
+category: monitoring
+settings: ./asc.settings.yaml
+
+runtime:
+  image: ghcr.io/statebyte/server-speedtest:latest
+
+requirements:
+  ram: 256M
+  disk: 512M
+  cpu: 0.5
+
+healthcheck:
+  http: /
+  interval: 30s

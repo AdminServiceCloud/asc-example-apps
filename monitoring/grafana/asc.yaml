@@ -1,0 +1,21 @@
+# Grafana OSS: metrics/logs dashboards, pinned to an upstream release.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: grafana
+version: 11.2.0
+type: docker
+title: Grafana
+description: "Open source metrics, logs and traces dashboards, pinned to an upstream release"
+category: monitoring
+settings: ./asc.settings.yaml
+
+runtime:
+  image: grafana/grafana-oss:11.2.0
+
+requirements:
+  ram: 512M
+  disk: 2G
+  cpu: 1
+
+healthcheck:
+  http: /login
+  interval: 30s

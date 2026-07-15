@@ -1,0 +1,59 @@
+# Traefik's static configuration can be set via TRAEFIK_<FLAG> environment
+# variables (the same names as its CLI flags, uppercased with underscores)
+# instead of a config file. Dynamic routing (which container serves what)
+# normally comes from Docker labels on the containers being routed to — ASC
+# apps don't expose custom container labels yet, so use the mounted
+# dynamic-config file for routing rules instead; see the README.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: dashboard
+    type: boolean
+    title: "Enable the dashboard"
+    default: true
+    env: TRAEFIK_API_DASHBOARD
+
+  - key: dashboard_insecure
+    type: boolean
+    title: "Expose the dashboard without auth"
+    description: "Fine for testing on a private network; never on the internet (TRAEFIK_API_INSECURE)"
+    default: false
+    env: TRAEFIK_API_INSECURE
+
+  - key: log_level
+    type: enum
+    title: "Log level"
+    values: [DEBUG, INFO, WARN, ERROR]
+    default: INFO
+    env: TRAEFIK_LOG_LEVEL
+
+  - key: http_port
+    type: ports
+    title: "HTTP entrypoint (web)"
+    default: [80]
+    limits: { min: 1, max: 65535 }
+    protocol: tcp
+
+  - key: https_port
+    type: ports
+    title: "HTTPS entrypoint (websecure)"
+    description: "TCP for HTTP/1.1+HTTP/2, UDP for HTTP/3 (QUIC) — both on the same port"
+    default: [443]
+    limits: { min: 1, max: 65535 }
+    protocol: both
+
+  - key: config
+    type: volumes
+    title: "Static/dynamic config volume"
+    description: "traefik.yml (static config) and any dynamic-config files (routers/services) go here"
+    default: [/etc/traefik:traefik-config]
+
+  - key: certs
+    type: volumes
+    title: "ACME/TLS state volume"
+    description: "Must persist across restarts to avoid Let's Encrypt rate limits"
+    default: [/letsencrypt:letsencrypt]
+
+quota:
+  max_cpu: 1
+  max_ram: 512M
+  max_disk: 1G

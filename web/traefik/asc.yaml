@@ -1,0 +1,21 @@
+# Traefik: reverse proxy and load balancer, pinned to an upstream release.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: traefik
+version: 3.1.4
+type: docker
+title: Traefik
+description: "Reverse proxy and load balancer, pinned to an upstream release"
+category: web
+settings: ./asc.settings.yaml
+
+runtime:
+  image: traefik:v3.1.4
+
+requirements:
+  ram: 256M
+  disk: 512M
+  cpu: 0.5
+
+healthcheck:
+  command: "traefik healthcheck"
+  interval: 30s

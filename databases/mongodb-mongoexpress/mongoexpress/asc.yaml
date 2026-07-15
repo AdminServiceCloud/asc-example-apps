@@ -1,0 +1,17 @@
+# mongo-express, the admin-UI half of the mongodb-mongoexpress stack.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: mongoexpress
+version: 1.0.2
+type: docker
+title: mongo-express
+description: "Web-based administration UI for MongoDB"
+category: databases
+settings: ./asc.settings.yaml
+
+runtime:
+  image: mongo-express:1.0.2
+
+requirements:
+  ram: 256M
+  disk: 256M
+  cpu: 0.5

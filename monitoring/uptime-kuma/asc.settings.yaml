@@ -1,0 +1,23 @@
+# Uptime Kuma has almost no env-based configuration by design: the admin
+# account, monitors and notifications are all set up through its own setup
+# wizard on first visit, stored in the data volume below.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: http_port
+    type: ports
+    title: "Web UI port"
+    default: [3001]
+    limits: { min: 1024, max: 65535 }
+    env: UPTIME_KUMA_PORT
+    protocol: tcp
+
+  - key: data
+    type: volumes
+    title: "Data volume"
+    description: "SQLite database, uploaded assets and the admin account created by the setup wizard"
+    default: [/app/data]
+
+quota:
+  max_cpu: 0.5
+  max_ram: 512M
+  max_disk: 2G

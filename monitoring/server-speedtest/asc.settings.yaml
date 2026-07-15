@@ -1,0 +1,70 @@
+# User-facing settings of Server Speedtest, mapped to the environment
+# variables documented in the project's .env.example
+# (https://github.com/statebyte/server-speedtest).
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: server_hostname
+    type: string
+    title: "Server label"
+    description: "Shown in server-info; defaults to the container's own hostname if left empty (SERVER_HOSTNAME)"
+    required: false
+    env: SERVER_HOSTNAME
+
+  - key: server_public_ip
+    type: string
+    title: "Public IP (advanced)"
+    description: "Used for the map and server metadata; auto-resolved via api.ipify.org when reachable if left empty (SERVER_PUBLIC_IP)"
+    required: false
+    env: SERVER_PUBLIC_IP
+
+  - key: hide_server_ip
+    type: boolean
+    title: "Hide server IP in API"
+    description: "Omits the server's IP from the public /api/server-info JSON; geolocation still uses the real IP (SERVER_INFO_HIDE_SERVER_IP)"
+    default: false
+    env: SERVER_INFO_HIDE_SERVER_IP
+
+  - key: hide_server_asn
+    type: boolean
+    title: "Hide server ASN/organization in API"
+    default: false
+    env: SERVER_INFO_HIDE_SERVER_ASN
+
+  - key: ice_port_min
+    type: number
+    title: "WebRTC ICE UDP port range: min"
+    description: "Must match the published ice_ports range below (WRTC_ICE_UDP_PORT_MIN)"
+    default: 10000
+    limits: { min: 1024, max: 65535 }
+    env: WRTC_ICE_UDP_PORT_MIN
+
+  - key: ice_port_max
+    type: number
+    title: "WebRTC ICE UDP port range: max"
+    description: "Must match the published ice_ports range below (WRTC_ICE_UDP_PORT_MAX)"
+    default: 10099
+    limits: { min: 1024, max: 65535 }
+    env: WRTC_ICE_UDP_PORT_MAX
+
+  - key: http_port
+    type: ports
+    title: "Web UI port"
+    default: [3000]
+    limits: { min: 1024, max: 65535 }
+    protocol: tcp
+
+  # WebRTC needs the whole range published individually (ASC publishes one
+  # host port per list entry, host == container) — keep this in sync with
+  # ice_port_min/ice_port_max above if you change them.
+  - key: ice_ports
+    type: ports
+    title: "WebRTC ICE UDP ports"
+    description: "The full 10000-10099 range the container uses for ICE connectivity during a test"
+    default: [10000, 10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008, 10009, 10010, 10011, 10012, 10013, 10014, 10015, 10016, 10017, 10018, 10019, 10020, 10021, 10022, 10023, 10024, 10025, 10026, 10027, 10028, 10029, 10030, 10031, 10032, 10033, 10034, 10035, 10036, 10037, 10038, 10039, 10040, 10041, 10042, 10043, 10044, 10045, 10046, 10047, 10048, 10049, 10050, 10051, 10052, 10053, 10054, 10055, 10056, 10057, 10058, 10059, 10060, 10061, 10062, 10063, 10064, 10065, 10066, 10067, 10068, 10069, 10070, 10071, 10072, 10073, 10074, 10075, 10076, 10077, 10078, 10079, 10080, 10081, 10082, 10083, 10084, 10085, 10086, 10087, 10088, 10089, 10090, 10091, 10092, 10093, 10094, 10095, 10096, 10097, 10098, 10099]
+    limits: { min: 1024, max: 65535 }
+    protocol: udp
+
+quota:
+  max_cpu: 1
+  max_ram: 512M
+  max_disk: 1G

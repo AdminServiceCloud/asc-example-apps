@@ -1,0 +1,21 @@
+# Ollama, the LLM runtime half of the ollama-openwebui stack.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: ollama
+version: 0.5.7
+type: docker
+title: Ollama
+description: "Local LLM runtime: pull and serve open models over an HTTP API"
+category: ai
+settings: ./asc.settings.yaml
+
+runtime:
+  image: ollama/ollama:0.5.7
+
+requirements:
+  ram: 8G
+  disk: 20G
+  cpu: 4
+
+healthcheck:
+  http: /
+  interval: 30s

@@ -1,0 +1,114 @@
+# User-facing settings of one GTA 5 (FiveM) server instance. Values are
+# exposed to the container as the environment variables documented by the
+# spritsail/fivem image (wrapper vars) and by txAdmin itself (TXHOST_* —
+# https://github.com/citizenfx/txAdmin/blob/master/docs/env-config.md).
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: license_key
+    type: secret
+    title: "Cfx.re server license key"
+    description: "From https://keymaster.fivem.net — required for FXServer to start (LICENSE_KEY)"
+    required: true
+    env: LICENSE_KEY
+
+  - key: rcon_password
+    type: secret
+    title: "RCON password"
+    description: "Leave empty for a randomly generated one (RCON_PASSWORD)"
+    default: ""
+    env: RCON_PASSWORD
+
+  - key: no_onesync
+    type: boolean
+    title: "Disable OneSync"
+    description: "OneSync raises the player limit past 32; disable only for legacy setups (NO_ONESYNC)"
+    default: false
+    env: NO_ONESYNC
+
+  - key: game_name
+    type: enum
+    title: "Game"
+    description: "Restrict the server to FiveM (GTA V) or RedM (Red Dead Redemption 2) (TXHOST_GAME_NAME)"
+    values: [fivem, redm]
+    default: fivem
+    env: TXHOST_GAME_NAME
+
+  - key: max_slots
+    type: number
+    title: "Max players"
+    description: "Enforced client-count limit (TXHOST_MAX_SLOTS); leave unset for the resources' own limit"
+    required: false
+    limits: { min: 1, max: 1024 }
+    env: TXHOST_MAX_SLOTS
+
+  - key: quiet_mode
+    type: boolean
+    title: "Quiet mode"
+    description: "Do not pipe FXServer's stdout/stderr into txAdmin's own log (TXHOST_QUIET_MODE)"
+    default: false
+    env: TXHOST_QUIET_MODE
+
+  - key: provider_name
+    type: string
+    title: "Hosting provider name"
+    description: "Shown in txAdmin's UI, 2-16 characters (TXHOST_PROVIDER_NAME)"
+    default: "ASC"
+    limits: { min_length: 2, max_length: 16 }
+    env: TXHOST_PROVIDER_NAME
+
+  - key: default_cfx_key
+    type: secret
+    title: "Default license key (setup wizard)"
+    description: "Pre-fills the license key in txAdmin's first-run setup wizard (TXHOST_DEFAULT_CFXKEY); usually the same value as the license key above"
+    default: ""
+    env: TXHOST_DEFAULT_CFXKEY
+
+  - key: default_admin_account
+    type: secret
+    title: "Default admin account (setup wizard)"
+    description: "Pre-creates the first txAdmin admin as 'username:fivemid:bcrypthash' (TXHOST_DEFAULT_ACCOUNT); generate the hash with txAdmin's own CLI, or leave empty to create the admin through the setup wizard"
+    default: ""
+    env: TXHOST_DEFAULT_ACCOUNT
+
+  - key: api_token
+    type: secret
+    title: "Host status API token"
+    description: "Secures the /host/status endpoint: 'disabled' or a 16-48 character token (TXHOST_API_TOKEN)"
+    default: ""
+    env: TXHOST_API_TOKEN
+
+  # `ports` settings are published on the host AND exposed via env, so the
+  # image listens on the same ports Docker forwards.
+  - key: game_port
+    type: ports
+    title: "FXServer game port (TCP/UDP)"
+    default: [30120]
+    limits: { min: 1024, max: 65535 }
+    env: TXHOST_FXS_PORT
+    protocol: both
+
+  - key: txadmin_port
+    type: ports
+    title: "txAdmin web console port (TCP)"
+    default: [40120]
+    limits: { min: 1024, max: 65535 }
+    env: TXHOST_TXA_PORT
+    protocol: tcp
+
+  # Server resources/mods and server.cfg, in this instance's data folder.
+  - key: server_data
+    type: volumes
+    title: "Server data volume"
+    default: [/config]
+
+  # txAdmin's own logs, config and internal database, kept separate from the
+  # server resources above.
+  - key: tx_data
+    type: volumes
+    title: "txAdmin data volume"
+    default: [/txData:txdata]
+
+quota:
+  max_cpu: 2
+  max_ram: 4G
+  max_disk: 10G

@@ -1,0 +1,24 @@
+# Ollama: local LLM runtime (pull and serve open models over an HTTP API).
+# CPU-only under ASC today — GPU passthrough isn't yet an exposed runtime
+# option (asc.schema.json has no 'gpus' field), so inference is slower than
+# on a GPU-enabled host running the same image directly.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: ollama
+version: 0.5.7
+type: docker
+title: Ollama
+description: "Local LLM runtime: pull and serve open models (Llama, Mistral, Qwen, ...) over an HTTP API"
+category: ai
+settings: ./asc.settings.yaml
+
+runtime:
+  image: ollama/ollama:0.5.7
+
+requirements:
+  ram: 8G
+  disk: 20G
+  cpu: 4
+
+healthcheck:
+  http: /
+  interval: 30s

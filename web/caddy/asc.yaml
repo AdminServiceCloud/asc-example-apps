@@ -1,0 +1,22 @@
+# Caddy: web server and reverse proxy with automatic HTTPS, pinned to an
+# upstream release.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: caddy
+version: 2.8.4
+type: docker
+title: Caddy
+description: "Web server and reverse proxy with automatic HTTPS, pinned to an upstream release"
+category: web
+settings: ./asc.settings.yaml
+
+runtime:
+  image: caddy:2.8.4
+
+requirements:
+  ram: 128M
+  disk: 512M
+  cpu: 0.5
+
+healthcheck:
+  http: /
+  interval: 30s

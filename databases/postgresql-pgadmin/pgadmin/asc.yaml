@@ -1,0 +1,17 @@
+# pgAdmin, the admin-UI half of the postgresql-pgadmin stack.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: pgadmin
+version: 8.9.0
+type: docker
+title: pgAdmin
+description: "Web-based administration UI for PostgreSQL"
+category: databases
+settings: ./asc.settings.yaml
+
+runtime:
+  image: dpage/pgadmin4:8.9
+
+requirements:
+  ram: 256M
+  disk: 512M
+  cpu: 0.5
