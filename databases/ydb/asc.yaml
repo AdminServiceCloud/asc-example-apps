@@ -1,0 +1,22 @@
+# YDB single-node local cluster (type: docker), pinned to a specific upstream
+# release of the official local-ydb image.
+# Schema: https://registry.adminservice.cloud/schema/asc.schema.json
+name: ydb
+version: 24.3.11.13
+type: docker
+title: YDB
+description: "Yandex open source distributed SQL database with strong consistency"
+category: databases
+settings: ./asc.settings.yaml
+
+runtime:
+  image: ydbplatform/local-ydb:24.3.11.13
+
+requirements:
+  ram: 2G
+  disk: 10G
+  cpu: 2
+
+healthcheck:
+  command: "curl -sf http://localhost:8765/ >/dev/null"
+  interval: 30s

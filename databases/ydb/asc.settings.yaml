@@ -1,0 +1,62 @@
+# User-facing settings of one YDB single-node local cluster, mapped to the
+# environment variables documented by the official ydbplatform/local-ydb
+# image.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: in_memory_pdisks
+    type: boolean
+    title: "Use in-memory storage (advanced)"
+    description: "Faster but non-persistent: all data is lost on container restart. Leave off to persist to the data volume"
+    default: false
+    env: YDB_USE_IN_MEMORY_PDISKS
+
+  - key: grpc_port
+    type: ports
+    title: "gRPC port"
+    description: "Plaintext gRPC endpoint used by the YDB CLI and SDKs"
+    default: [2136]
+    limits: { min: 1024, max: 65535 }
+    env: GRPC_PORT
+    protocol: tcp
+
+  - key: grpc_tls_port
+    type: ports
+    title: "gRPC TLS port"
+    description: "TLS-secured gRPC endpoint"
+    default: [2135]
+    limits: { min: 1024, max: 65535 }
+    env: GRPC_TLS_PORT
+    protocol: tcp
+
+  - key: mon_port
+    type: ports
+    title: "Monitoring / Web UI port"
+    description: "Embedded UI and healthcheck endpoint"
+    default: [8765]
+    limits: { min: 1024, max: 65535 }
+    env: MON_PORT
+    protocol: tcp
+
+  - key: kafka_proxy_port
+    type: ports
+    title: "Kafka proxy port"
+    description: "Kafka-compatible API endpoint"
+    default: [9092]
+    limits: { min: 1024, max: 65535 }
+    env: YDB_KAFKA_PROXY_PORT
+    protocol: tcp
+
+  - key: certs
+    type: volumes
+    title: "Certificates volume"
+    default: [/ydb_certs]
+
+  - key: data
+    type: volumes
+    title: "Data volume"
+    default: [/ydb_data]
+
+quota:
+  max_cpu: 4
+  max_ram: 8G
+  max_disk: 30G

@@ -1,0 +1,61 @@
+# User-facing settings of one ClickHouse instance, mapped to the environment
+# variables documented by the official clickhouse/clickhouse-server image.
+# Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
+settings:
+  - key: database
+    type: string
+    title: "Default database"
+    default: "default"
+    limits: { max_length: 63 }
+    env: CLICKHOUSE_DB
+
+  - key: username
+    type: string
+    title: "Default user"
+    default: "default"
+    limits: { max_length: 63, pattern: "^[a-zA-Z_][a-zA-Z0-9_]*$" }
+    env: CLICKHOUSE_USER
+
+  - key: password
+    type: secret
+    title: "Default user password"
+    required: true
+    env: CLICKHOUSE_PASSWORD
+
+  - key: access_management
+    type: boolean
+    title: "Allow the default user to manage access (advanced)"
+    description: "Lets the default user create/alter other users and roles via SQL"
+    default: false
+    env: CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT
+
+  - key: http_port
+    type: ports
+    title: "HTTP port"
+    description: "REST/HTTP query interface, also used by the built-in healthcheck"
+    default: [8123]
+    limits: { min: 1024, max: 65535 }
+    protocol: tcp
+
+  - key: native_port
+    type: ports
+    title: "Native TCP port"
+    description: "Native protocol used by clickhouse-client and most drivers"
+    default: [9000]
+    limits: { min: 1024, max: 65535 }
+    protocol: tcp
+
+  - key: data
+    type: volumes
+    title: "Data volume"
+    default: [/var/lib/clickhouse]
+
+  - key: logs
+    type: volumes
+    title: "Logs volume"
+    default: [/var/log/clickhouse-server]
+
+quota:
+  max_cpu: 2
+  max_ram: 4G
+  max_disk: 20G
