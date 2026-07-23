@@ -1,9 +1,13 @@
-# 7 Days to Die dedicated server: the image (renegademaster/7_days_to_die-dedicated-server)
-# downloads the game itself via SteamCMD on start and keeps it, together with
-# this instance's config and saves, in the app's own volumes.
+# 7 Days to Die dedicated server: a custom image (Dockerfile in this
+# directory) since no maintained prebuilt image exposes every game setting
+# (name, password, max players, visibility...) as an environment variable.
+# The entrypoint runs SteamCMD anonymously and passes each setting straight
+# to the game binary as a -PropertyName=value override on top of its own
+# bundled serverconfig.xml, so the game installation, config and saves all
+# live in this instance's private volumes.
 # Schema: https://registry.adminservice.cloud/schema/asc.schema.json
 name: 7dtd
-version: 1.6.0
+version: 2.0.0
 type: docker
 title: 7 Days to Die server
 description: "7 Days to Die dedicated server; the game installation is downloaded on first start into the instance's private volumes"
@@ -11,7 +15,10 @@ category: game-servers
 settings: ./asc.settings.yaml
 
 runtime:
-  image: renegademaster/7_days_to_die-dedicated-server:1.0.0
+  image-build:
+    context: .
+    dockerfile: Dockerfile
+    tag: "asc-local/7dtd:latest"
 
 # Environment variables, published ports and volumes are all declared in
 # asc.settings.yaml (settings with env:, type: ports, type: volumes) — the

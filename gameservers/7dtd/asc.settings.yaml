@@ -1,30 +1,31 @@
 # User-facing settings of one 7 Days to Die server instance. Values are
-# exposed to the container as the environment variables documented by the
-# renegademaster/7_days_to_die-dedicated-server image; `type: ports` settings
-# are also published on the host, `type: volumes` settings define the app's
-# mounts.
+# exposed to the container as the environment variables read by this app's
+# own entrypoint.sh (see ../Dockerfile), which passes each of them straight
+# to the game binary as a -PropertyName=value override on top of its bundled
+# serverconfig.xml. `type: ports` settings are also published on the host;
+# `type: volumes` settings define the app's mounts.
 # Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
 settings:
   - key: server_name
     type: string
     title: "Server name"
-    description: "Publicly visible server name"
+    description: "Publicly visible server name (ServerName)"
     default: "7DaysToDieServer"
-    limits: { max_length: 64, pattern: "^[a-zA-Z0-9]+$" }
+    limits: { max_length: 64 }
     env: SERVER_NAME
 
   - key: server_desc
     type: string
     title: "Server description"
-    description: "Publicly visible server description"
+    description: "Publicly visible server description (ServerDescription)"
     default: "7DaysToDieServer"
-    limits: { max_length: 128, pattern: "^[a-zA-Z0-9]+$" }
+    limits: { max_length: 128 }
     env: SERVER_DESC
 
   - key: game_version
     type: enum
     title: "Game version"
-    description: "SteamCMD branch to serve; pick a preset or enter a custom branch/build id"
+    description: "SteamCMD branch to install; pick a preset or enter a custom branch id. Left as 'public' (the default branch), no -beta flag is passed to SteamCMD"
     values: [public, latest_experimental]
     default: public
     allow_custom: true
@@ -33,7 +34,7 @@ settings:
   - key: public_server
     type: enum
     title: "Server visibility"
-    description: "0 = not listed, 1 = friends only, 2 = friends of friends, 3 = everyone"
+    description: "0 = not listed, 1 = friends only, 2 = friends of friends, 3 = everyone (ServerVisibility)"
     values: [0, 1, 2, 3]
     default: 2
     env: PUBLIC_SERVER
@@ -41,6 +42,7 @@ settings:
   - key: max_players
     type: number
     title: "Max players"
+    description: "ServerMaxPlayerCount"
     default: 8
     limits: { min: 1, max: 64 }
     env: MAX_PLAYERS
@@ -48,48 +50,88 @@ settings:
   - key: server_password
     type: secret
     title: "Server password"
-    description: "Leave empty for a public server"
+    description: "Leave empty for a public server (ServerPassword)"
     default: ""
     env: SERVER_PASSWORD
 
-  - key: server_log_file
+  - key: game_difficulty
+    type: enum
+    title: "Game difficulty"
+    description: "0 = easiest, 5 = hardest (GameDifficulty)"
+    values: [0, 1, 2, 3, 4, 5]
+    default: 2
+    env: GAME_DIFFICULTY
+
+  - key: disabled_network_protocols
     type: string
-    title: "Log file path"
-    description: "Path (inside the container) to store the server log file; empty logs to stdout only"
+    title: "Disabled network protocols"
+    description: "Comma-separated, e.g. SteamNetworking to disable it behind NAT with no port forwarding (ServerDisabledNetworkProtocols); leave empty to keep both enabled"
     default: ""
-    env: SERVER_LOG_FILE
+    required: false
+    env: SERVER_DISABLED_NETWORK_PROTOCOLS
+
+  - key: auto_update
+    type: boolean
+    title: "Update on every start"
+    description: "Run SteamCMD app_update before launching the server each time it starts; always forced on the very first start regardless of this setting"
+    default: true
+    env: AUTO_UPDATE
+
+  - key: steam_validate
+    type: boolean
+    title: "Validate game files on start"
+    description: "Forces SteamCMD to validate/redownload corrupted game files; always forced on the very first install regardless of this setting"
+    default: false
+    env: STEAM_VALIDATE
+
+  - key: telnet_port
+    type: number
+    title: "Telnet port (internal)"
+    description: "In-container admin telnet port; not published on the host, only reachable inside the app's Docker network"
+    default: 8081
+    limits: { min: 1024, max: 65535 }
+    env: TELNET_PORT
+
+  - key: telnet_password
+    type: secret
+    title: "Telnet password"
+    description: "Leave empty to keep telnet unauthenticated (fine as long as telnet_port stays unpublished)"
+    default: ""
+    env: TELNET_PASSWORD
 
   # The game/query port is published on the host AND exposed via env, so the
-  # image listens on the same port Docker forwards.
+  # server listens on the same port Docker forwards.
   - key: game_port
     type: ports
     title: "Game port (TCP+UDP)"
     default: [26900]
     limits: { min: 1024, max: 65535 }
-    env: QUERY_PORT
+    env: GAME_PORT
     protocol: both
 
-  # Two more ports the image always uses at base+1/base+2, with no env var of
-  # their own — republish them alongside game_port if you change it.
+  # Two more ports the game binary always uses at base+1/base+2, with no env
+  # var of their own — republish them alongside game_port if you change it.
   - key: extra_game_ports
     type: ports
     title: "Additional game ports (UDP)"
-    description: "Fixed at game_port+1 and game_port+2 by the image; keep these two numbers in sync with game_port"
+    description: "Fixed at game_port+1 and game_port+2 by the server; keep these two numbers in sync with game_port"
     default: [26901, 26902]
     limits: { min: 1024, max: 65535 }
     protocol: udp
 
-  # Game server files (downloaded by SteamCMD on first start) and the
-  # server's own config, kept in this instance's private volumes.
+  # Game server files (downloaded by SteamCMD on first start), kept in this
+  # instance's private volume so the ~12 GB download survives recreation.
   - key: server_files
     type: volumes
     title: "Game server files volume"
     default: [/home/steam/7DTDServer]
 
-  - key: server_config
+  # Saves, player data and logs, kept separate from the (large, disposable
+  # and re-downloadable) server files above.
+  - key: server_data
     type: volumes
-    title: "Server config volume"
-    default: [/home/steam/7DTDConfig:gameconfig]
+    title: "Saves and logs volume"
+    default: [/home/steam/.local/share/7DaysToDie]
 
 quota:
   max_cpu: 2
