@@ -102,18 +102,17 @@ log "Starting 7 Days to Die dedicated server on port ${GAME_PORT:-26900}..."
 
 # The binary's real log goes only to -logfile, never to stdout, so
 # `asc app logs`/`docker logs` would otherwise show nothing past this
-# script's own banner lines. Run it in the background and `tail -F` that
-# file in the foreground instead of `exec`-ing straight into it — `-F`
-# (not `-f`) tolerates starting before the game has created the file yet.
-# `--pid` stops the tail once the game process exits, so nothing is left
-# to clean up. Backgrounding means this script — not the game — is PID 1,
-# so `docker stop`/`asc app stop` (SIGTERM) needs forwarding to the game
-# explicitly, or it would never get a chance to save and shut down clean
-# before the Engine's grace period kills it outright.
-"${BINARY}" "${ARGS[@]}" &
-GAME_PID=$!
-trap 'kill -TERM "${GAME_PID}" 2>/dev/null || true; wait "${GAME_PID}"; exit $?' TERM INT
+# script's own banner lines. Tail that file to stdout in the background,
+# ahead of the exec below rather than backgrounding the game itself:
+# `exec` keeps the game as PID 1, so signals reach it directly (no manual
+# SIGTERM forwarding needed) and — the part that actually matters for the
+# admin console — it inherits this script's real stdin. Backgrounding the
+# game instead would silently swap that stdin for /dev/null, same as any
+# backgrounded job in a non-interactive shell, breaking `asc attach`
+# console input even with the container's own stdin wired up correctly.
+# `-F` (not `-f`) tolerates starting before the game has created the file
+# yet; `--pid=$$` stops tail once this script's PID exits (the exec below
+# keeps that same PID, just running a different program under it).
+tail -n +1 -F "${DATA_DIR}/logs/latest.log" --pid=$$ &
 
-tail -n +1 -F "${DATA_DIR}/logs/latest.log" --pid="${GAME_PID}" &
-
-wait "${GAME_PID}"
+exec "${BINARY}" "${ARGS[@]}"

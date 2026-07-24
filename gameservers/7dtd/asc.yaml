@@ -7,7 +7,7 @@
 # live in this instance's private volumes.
 # Schema: https://registry.adminservice.cloud/schema/asc.schema.json
 name: 7dtd
-version: 2.0.3
+version: 2.0.4
 type: docker
 title: 7 Days to Die server
 description: "7 Days to Die dedicated server; the game installation is downloaded on first start into the instance's private volumes"
@@ -19,6 +19,11 @@ runtime:
     context: .
     dockerfile: Dockerfile
     tag: "asc-local/7dtd:latest"
+  # The Telnet console works regardless, but keep stdin open and allocate a
+  # TTY (docker run -it) too so `asc attach` can also send console commands
+  # directly, same as cs2-server.
+  stdin: true
+  tty: true
 
 # Environment variables, published ports and volumes are all declared in
 # asc.settings.yaml (settings with env:, type: ports, type: volumes) — the
