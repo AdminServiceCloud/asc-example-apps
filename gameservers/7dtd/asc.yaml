@@ -19,9 +19,11 @@ runtime:
     context: .
     dockerfile: Dockerfile
     tag: "asc-local/7dtd:latest"
-  # The Telnet console works regardless, but keep stdin open and allocate a
-  # TTY (docker run -it) too so `asc attach` can also send console commands
-  # directly, same as cs2-server.
+  # Cosmetic only: keeps `asc attach` from immediately closing the session
+  # and gives it a real TTY. The dedicated server binary itself never reads
+  # admin commands from stdin on Linux (confirmed against upstream/other
+  # Docker images of this game) — Telnet (telnet_port in asc.settings.yaml)
+  # is the only console it actually listens on.
   stdin: true
   tty: true
 
