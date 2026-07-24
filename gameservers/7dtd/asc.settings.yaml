@@ -102,7 +102,7 @@ settings:
   - key: web_dashboard_enabled
     type: boolean
     title: "Web dashboard"
-    description: "Built-in browser admin panel — player list, live map, chat (WebDashboardEnabled). Unlike telnet_port this one is published: create a login by running 'createwebuser <user> <password> 0' over telnet first, the dashboard has no default account"
+    description: "Built-in browser admin panel — player list, live map, chat (WebDashboardEnabled). Unlike telnet_port this one is published; the dashboard has no default account — see README for the login setup (createwebuser only runs from a connected player's in-game console, not telnet)"
     default: true
     env: WEB_DASHBOARD_ENABLED
 

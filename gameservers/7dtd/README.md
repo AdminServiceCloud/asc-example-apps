@@ -69,10 +69,22 @@ bash -c 'exec 3<>/dev/tcp/localhost/8081; echo "gettime" >&3; sleep 1;
 timeout 1 cat <&3'`) or with a real telnet client if the port is published.
 
 The web dashboard (`web_dashboard_enabled`, default on) has no account by
-default — create one the same way, over telnet: `createwebuser <user>
-<password> 0` (permission level `0` = full admin), then open
-`http://<host>:<web_dashboard_port>/`. `enable_map_rendering` (default on)
-is what powers the dashboard's live map view.
+default, and — confirmed live, telnet rejects it outright with "Command
+can only be executed from the in-game console" — `createwebuser` **cannot**
+be bootstrapped from telnet, only from a real connected player's in-game
+console. There's no way around actually launching the game client for this
+one step:
+
+1. Connect to the server as a player with the real game client.
+2. From telnet (which needs no prior permission — it's the server owner's
+   channel, not a player's), `listplayers` to find your entity id, then
+   `admin add <entityid> 0` to grant that player permission level `0`.
+3. In the connected game client's own console (default key **F1**), run
+   `createwebuser <user> <password> 0`.
+4. Open `http://<host>:<web_dashboard_port>/` and log in with that account.
+
+`enable_map_rendering` (default on) is what powers the dashboard's live map
+view.
 
 ## ✅ Verified live
 
@@ -83,5 +95,7 @@ Steamworks EOS SDK hang), missing `~/.steam/sdk32`/`sdk64` symlinks
 (`SteamGameServer_Init` failing silently and leaving every connecting
 player stuck on "Server is still initializing" even once the world had
 finished loading), and console access (telnet, confirmed working; stdin
-does not). The web dashboard added in this pass has not been live-verified
-yet — the telnet-based `createwebuser` step in particular is untested.
+does not, neither does `createwebuser` specifically — see above). The web
+dashboard's login flow itself (steps 1-4 above) has not been live-verified
+past confirming `createwebuser` rejects telnet — it needs an actual game
+client to test the rest.
