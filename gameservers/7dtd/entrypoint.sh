@@ -74,4 +74,21 @@ ARGS=(
 [[ -n "${SERVER_DISABLED_NETWORK_PROTOCOLS:-}" ]] && ARGS+=(-ServerDisabledNetworkProtocols="${SERVER_DISABLED_NETWORK_PROTOCOLS}")
 
 log "Starting 7 Days to Die dedicated server on port ${GAME_PORT:-26900}..."
-exec "${BINARY}" "${ARGS[@]}"
+
+# The binary's real log goes only to -logfile, never to stdout, so
+# `asc app logs`/`docker logs` would otherwise show nothing past this
+# script's own banner lines. Run it in the background and `tail -F` that
+# file in the foreground instead of `exec`-ing straight into it — `-F`
+# (not `-f`) tolerates starting before the game has created the file yet.
+# `--pid` stops the tail once the game process exits, so nothing is left
+# to clean up. Backgrounding means this script — not the game — is PID 1,
+# so `docker stop`/`asc app stop` (SIGTERM) needs forwarding to the game
+# explicitly, or it would never get a chance to save and shut down clean
+# before the Engine's grace period kills it outright.
+"${BINARY}" "${ARGS[@]}" &
+GAME_PID=$!
+trap 'kill -TERM "${GAME_PID}" 2>/dev/null || true; wait "${GAME_PID}"; exit $?' TERM INT
+
+tail -n +1 -F "${DATA_DIR}/logs/latest.log" --pid="${GAME_PID}" &
+
+wait "${GAME_PID}"
