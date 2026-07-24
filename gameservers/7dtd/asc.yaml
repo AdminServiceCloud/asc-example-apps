@@ -7,7 +7,7 @@
 # live in this instance's private volumes.
 # Schema: https://registry.adminservice.cloud/schema/asc.schema.json
 name: 7dtd
-version: 2.0.2
+version: 2.0.3
 type: docker
 title: 7 Days to Die server
 description: "7 Days to Die dedicated server; the game installation is downloaded on first start into the instance's private volumes"

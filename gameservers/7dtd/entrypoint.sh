@@ -9,6 +9,18 @@ log() { echo "[entrypoint] $*"; }
 
 mkdir -p "${DATA_DIR}/logs"
 
+# SteamCMD only unpacks its own bundled Steamworks client library
+# (steamclient.so, needed further down) on its own first invocation —
+# unrelated to AUTO_UPDATE/the game's +app_update below, which this run
+# may skip entirely (AUTO_UPDATE=0 with the binary already present). Its
+# own install directory isn't a persisted volume, so a freshly recreated
+# container can reach that skip with the library never having been
+# unpacked at all. `+quit` alone is cheap even against an already-warm
+# cache; always run it so the library is there regardless of what happens
+# next. Not fatal on its own — the real update attempt below has its own
+# error handling.
+steamcmd +quit || true
+
 # Only pass -beta when a non-default branch was requested; "public" is the
 # default branch already.
 BETA_ARGS=()
