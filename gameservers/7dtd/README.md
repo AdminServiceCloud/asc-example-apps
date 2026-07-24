@@ -88,14 +88,15 @@ view.
 
 ## ✅ Verified live
 
-Installed and run end to end on a real host through several rounds of
-fixes: image build (BuildKit, DMN-050), the SteamCMD cold-cache retry, a
-container-wide open-files limit bump (`ulimit nofile`, an unrelated
-Steamworks EOS SDK hang), missing `~/.steam/sdk32`/`sdk64` symlinks
-(`SteamGameServer_Init` failing silently and leaving every connecting
-player stuck on "Server is still initializing" even once the world had
-finished loading), and console access (telnet, confirmed working; stdin
-does not, neither does `createwebuser` specifically — see above). The web
-dashboard's login flow itself (steps 1-4 above) has not been live-verified
-past confirming `createwebuser` rejects telnet — it needs an actual game
-client to test the rest.
+Installed and run end to end on a real host, on game version **V 3.0.1
+(b4)**, through several rounds of fixes: image build (BuildKit, DMN-050),
+the SteamCMD cold-cache retry, a container-wide open-files limit bump
+(`ulimit nofile`, an unrelated Steamworks EOS SDK hang), missing
+`~/.steam/sdk32`/`sdk64` symlinks (`SteamGameServer_Init` failing silently
+and leaving every connecting player stuck on "Server is still
+initializing" even once the world had finished loading), console access
+(telnet confirmed working; stdin does not, neither does `createwebuser`
+specifically — see above), and the full web dashboard login flow (steps
+1-4 above) — a player connected, granted themselves admin over telnet,
+created a web user from the in-game console, and logged into the
+dashboard successfully.
