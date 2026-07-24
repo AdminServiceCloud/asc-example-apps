@@ -52,6 +52,19 @@ if [[ ! -f "${BINARY}" ]]; then
   exit 1
 fi
 
+# The game's embedded Steamworks client looks for steamclient.so under
+# ~/.steam/sdk32 and sdk64 — a symlink the official Steam client normally
+# creates on install, which SteamCMD never does on its own. Without it
+# SteamGameServer_Init fails (logged, not fatal — the process keeps
+# running) and the server reports "Server is still initializing" to every
+# connecting player forever, even once the world and EOS session are
+# already fully up. SteamCMD ships its own copy of the library right next
+# to itself; point the missing symlinks at that.
+STEAMCMD_DIR="${HOME}/.local/share/Steam/steamcmd"
+mkdir -p "${HOME}/.steam/sdk32" "${HOME}/.steam/sdk64"
+ln -sf "${STEAMCMD_DIR}/linux32/steamclient.so" "${HOME}/.steam/sdk32/steamclient.so"
+ln -sf "${STEAMCMD_DIR}/linux64/steamclient.so" "${HOME}/.steam/sdk64/steamclient.so"
+
 chmod +x "${BINARY}"
 cd "${SERVER_DIR}"
 
