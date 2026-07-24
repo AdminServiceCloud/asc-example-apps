@@ -99,6 +99,28 @@ settings:
     default: ""
     env: TELNET_PASSWORD
 
+  - key: web_dashboard_enabled
+    type: boolean
+    title: "Web dashboard"
+    description: "Built-in browser admin panel — player list, live map, chat (WebDashboardEnabled). Unlike telnet_port this one is published: create a login by running 'createwebuser <user> <password> 0' over telnet first, the dashboard has no default account"
+    default: true
+    env: WEB_DASHBOARD_ENABLED
+
+  - key: web_dashboard_port
+    type: ports
+    title: "Web dashboard port"
+    default: [8080]
+    limits: { min: 1024, max: 65535 }
+    env: WEB_DASHBOARD_PORT
+    protocol: tcp
+
+  - key: enable_map_rendering
+    type: boolean
+    title: "Render map tiles"
+    description: "Needed for the web dashboard's live map view (EnableMapRendering); a small CPU/disk cost paid while exploring, not at idle"
+    default: true
+    env: ENABLE_MAP_RENDERING
+
   # The game/query port is published on the host AND exposed via env, so the
   # server listens on the same port Docker forwards.
   - key: game_port

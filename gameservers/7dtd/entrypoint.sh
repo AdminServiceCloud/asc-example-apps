@@ -29,7 +29,7 @@ if [[ -n "${GAME_VERSION:-}" && "${GAME_VERSION}" != "public" ]]; then
 fi
 
 VALIDATE_ARGS=()
-if [[ "${STEAM_VALIDATE:-0}" == "1" || ! -f "${BINARY}" ]]; then
+if [[ "${STEAM_VALIDATE:-false}" == "true" || ! -f "${BINARY}" ]]; then
   VALIDATE_ARGS=(validate)
 fi
 
@@ -39,7 +39,7 @@ fi
 # hasn't warmed its local appinfo cache for this app yet. Retrying the exact
 # same command immediately afterwards succeeds, cache now warm. This is a
 # known SteamCMD quirk, not specific to this app or image.
-if [[ "${AUTO_UPDATE:-1}" == "1" || ! -f "${BINARY}" ]]; then
+if [[ "${AUTO_UPDATE:-true}" == "true" || ! -f "${BINARY}" ]]; then
   log "Updating 7 Days to Die dedicated server (appid ${STEAMAPPID})..."
   ATTEMPTS=3
   for ((i = 1; i <= ATTEMPTS; i++)); do
@@ -92,6 +92,9 @@ ARGS=(
   -GameDifficulty="${GAME_DIFFICULTY:-2}"
   -TelnetEnabled=true
   -TelnetPort="${TELNET_PORT:-8081}"
+  -WebDashboardEnabled="${WEB_DASHBOARD_ENABLED:-true}"
+  -WebDashboardPort="${WEB_DASHBOARD_PORT:-8080}"
+  -EnableMapRendering="${ENABLE_MAP_RENDERING:-true}"
 )
 
 [[ -n "${SERVER_PASSWORD:-}" ]] && ARGS+=(-ServerPassword="${SERVER_PASSWORD}")

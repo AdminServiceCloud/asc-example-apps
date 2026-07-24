@@ -20,7 +20,7 @@ WORKDIR /home/steam
 
 VOLUME ["/home/steam/7DTDServer", "/home/steam/.local/share/7DaysToDie"]
 
-EXPOSE 26900/tcp 26900/udp 26901/udp 26902/udp 8081/tcp
+EXPOSE 26900/tcp 26900/udp 26901/udp 26902/udp 8081/tcp 8080/tcp
 
 STOPSIGNAL SIGTERM
 
