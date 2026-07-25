@@ -92,6 +92,7 @@ More details in [📦 package-manager](../asc-daemon/docs/package-manager.md).
 
 ## 📚 Documentation and roadmap
 
+- 🌐 Public docs site: [docs.adminservice.cloud](https://docs.adminservice.cloud) ([GitHub Pages mirror](https://adminservicecloud.github.io/asc-documentaion/))
 - [📦 asc.yaml and registry format](../asc-daemon/docs/package-manager.md)
 - [🛍️ App store](../asc-platform/docs/features/app-store.md)
 - [🎯 ROADMAP](../asc-platform/ROADMAP.md) — examples task: `REG-002`
