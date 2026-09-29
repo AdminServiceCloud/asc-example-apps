@@ -44,6 +44,26 @@ settings:
     title: "Data volume"
     default: [/var/lib/mysql]
 
+# First-run questionnaire. The database and user are only created on the very
+# first start (empty data volume), so it is worth answering before launching.
+setup:
+  title: "MariaDB setup"
+  description: "A few questions before the first start. The database and user are created only once, on the first start."
+  questions:
+    - setting: root_password
+      question: "Choose a root password"
+      hint: "Full administrator access to the server"
+      required: true
+    - setting: database
+      question: "Database to create"
+      hint: "Leave empty to create no database"
+    - setting: username
+      question: "Application user"
+      hint: "Gets full access to the database above; leave empty to skip"
+    - setting: password
+      question: "Application user password"
+      hint: "Needed if you set an application user"
+
 quota:
   max_cpu: 1
   max_ram: 1G

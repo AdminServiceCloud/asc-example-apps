@@ -312,6 +312,34 @@ settings:
     title: "Game installation volume"
     default: [/home/steam/cs2-dedicated]
 
+# First-run questionnaire shown while the (large) game download runs. The two
+# secrets have no default, so the server will not start until they are set.
+setup:
+  title: "CS2 server setup"
+  description: "A few questions before the first start. Everything can be changed later in the app settings."
+  questions:
+    - setting: srcds_token
+      question: "Game Server Login Token"
+      hint: "Create one at https://steamcommunity.com/dev/managegameservers using app ID 730"
+      required: true
+    - setting: rcon_password
+      question: "Choose an RCON password"
+      hint: "Used to administer the server remotely from the game console"
+      required: true
+    - setting: server_name
+      question: "Server name"
+      hint: "Shown in the server browser"
+    - setting: server_password
+      question: "Join password"
+      hint: "Leave empty for a public server"
+    - setting: game_mode
+      question: "Game mode"
+      hint: "Pick a preset, or type any official alias such as scrimcomp5v5"
+    - setting: map
+      question: "Start map"
+    - setting: max_players
+      question: "Max players"
+
 quota:
   max_cpu: 2
   max_ram: 4G

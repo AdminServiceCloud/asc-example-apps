@@ -108,6 +108,26 @@ settings:
     title: "txAdmin data volume"
     default: [/txData:txdata]
 
+# First-run questionnaire. FXServer refuses to start without a license key, so
+# that question is required; the rest can be skipped.
+setup:
+  title: "FiveM server setup"
+  description: "A few questions before the first start. Everything can be changed later in the app settings."
+  questions:
+    - setting: license_key
+      question: "Cfx.re server license key"
+      hint: "Get one at https://keymaster.fivem.net — FXServer will not start without it"
+      required: true
+    - setting: game_name
+      question: "Which game is this server for?"
+      hint: "FiveM is GTA V, RedM is Red Dead Redemption 2"
+    - setting: max_slots
+      question: "Max players"
+      hint: "Leave empty to use the resources' own limit"
+    - setting: rcon_password
+      question: "RCON password"
+      hint: "Leave empty for a randomly generated one"
+
 quota:
   max_cpu: 2
   max_ram: 4G
