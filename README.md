@@ -36,7 +36,7 @@ Examples are grouped in folders that match their [registry](../registry) categor
 
 | Example | Description |
 |---|---|
-| `ai/ollama/` | 🦙 Local LLM runtime (CPU-only under ASC today — no GPU passthrough yet) |
+| `ai/ollama/` | 🦙 Local LLM runtime (CPU by default; attach the host's GPUs in the app settings) |
 | `ai/ollama-openwebui/` | 💬 Ollama paired with Open WebUI, a ChatGPT-style chat interface |
 | `ai/lm-studio/` | 🖥️ Headless LM Studio (`llmster`), OpenAI-compatible API; a channel tag (`:cpu`) pinned instead of a version, since upstream has none yet |
 

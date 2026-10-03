@@ -1,7 +1,8 @@
 # Ollama: local LLM runtime (pull and serve open models over an HTTP API).
-# CPU-only under ASC today — GPU passthrough isn't yet an exposed runtime
-# option (asc.schema.json has no 'gpus' field), so inference is slower than
-# on a GPU-enabled host running the same image directly.
+# Runs on the CPU by default. To use the host's GPUs, pick them in the app's
+# settings after install (`asc app settings ollama` → gpus, or Settings →
+# Resources → Graphics cards on the platform); the daemon attaches the cards to
+# the container (asc-daemon 0.55.0+, Docker apps only).
 # Schema: https://registry.adminservice.cloud/schema/asc.schema.json
 name: ollama
 version: 0.5.7

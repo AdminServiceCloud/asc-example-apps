@@ -21,13 +21,24 @@ curl http://localhost:11434/api/pull -d '{"model": "llama3.2"}'
 curl http://localhost:11434/api/generate -d '{"model": "llama3.2", "prompt": "Hello!"}'
 ```
 
-## ⚠️ CPU-only under ASC today
+## 🎮 GPU acceleration
 
-The image supports NVIDIA/AMD GPU acceleration, but that requires passing
-through host GPU devices to the container — `asc.schema.json`'s `runtime`
-section has no such option yet, so this package runs CPU-only. Expect
-noticeably slower inference than a GPU-enabled host running the same image
-directly; size `requirements`/`quota` and model choice accordingly.
+Out of the box the package runs on the CPU — a manifest cannot decide which
+of a host's graphics cards an app may use, so the choice is the owner's. To
+use the GPU, attach it after the install:
+
+```bash
+asc hardware                 # lists the cards with their PCI addresses
+asc app settings ollama      # category "gpus": toggle the cards to attach
+asc app restart ollama       # the container is recreated with the cards
+```
+
+On the platform the same choice is Settings → Resources → Graphics cards.
+NVIDIA cards need the proprietary driver and the NVIDIA Container Toolkit on
+the host; AMD and Intel cards need a DRM render node. (`asc hardware` says
+which cards can be attached and why not.) Requires asc-daemon 0.55.0 or newer.
+Without a GPU, expect noticeably slower inference; size `requirements`/`quota`
+and model choice accordingly.
 
 ## 📖 What it demonstrates
 
