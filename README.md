@@ -2,7 +2,7 @@
 
 > 🌍 **Language:** English · [🇷🇺 Русская версия](docs/russian/README.md)
 
-Example applications and `asc.yaml` manifests for [asc-daemon](../asc-daemon): templates for developers who want to package their application for the [AdminService.Cloud](../asc-platform) app store or a custom registry.
+Example applications and `asc.yaml` manifests for [asc-daemon](../asc-daemon): templates for developers who want to package their application for the AdminService.Cloud app store or a custom registry.
 
 ## 📂 What's inside
 
@@ -90,12 +90,10 @@ apps:
 
 More details in [📦 package-manager](../asc-daemon/docs/package-manager.md).
 
-## 📚 Documentation and roadmap
+## 📚 Documentation
 
 - 🌐 Public docs site: [docs.adminservice.cloud](https://docs.adminservice.cloud)
 - [📦 asc.yaml and registry format](../asc-daemon/docs/package-manager.md)
-- [🛍️ App store](../asc-platform/docs/features/app-store.md)
-- [🎯 ROADMAP](../asc-platform/ROADMAP.md) — examples task: `REG-002`
 
 > ⚠️ The `old/` directory holds earlier work and is kept for reference only.
 

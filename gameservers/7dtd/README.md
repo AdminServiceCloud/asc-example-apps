@@ -89,7 +89,7 @@ view.
 ## ✅ Verified live
 
 Installed and run end to end on a real host, on game version **V 3.0.1
-(b4)**, through several rounds of fixes: image build (BuildKit, DMN-050),
+(b4)**, through several rounds of fixes: image build (BuildKit),
 the SteamCMD cold-cache retry, a container-wide open-files limit bump
 (`ulimit nofile`, an unrelated Steamworks EOS SDK hang), missing
 `~/.steam/sdk32`/`sdk64` symlinks (`SteamGameServer_Init` failing silently

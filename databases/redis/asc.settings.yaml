@@ -1,7 +1,7 @@
 # User-facing settings of one Redis instance. The official redis image has
 # no env-based configuration (Redis has no built-in support for it) — every
 # setting here is threaded into the launch command via start_command
-# (DMN-018), which replaces the image's default `redis-server` invocation.
+#, which replaces the image's default `redis-server` invocation.
 # Schema: https://registry.adminservice.cloud/schema/asc.settings.schema.json
 settings:
   - key: password

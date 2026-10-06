@@ -32,7 +32,6 @@ Examples are living documentation of the asc.yaml / asc.stack.yaml format. See A
 
 ## 🔗 Related
 
-- Roadmap task: REG-002
 - Closes #
 
 ## 🔎 How to test

@@ -3,7 +3,7 @@
 #
 # A shared "master" installation (one game-files volume reused read-only by
 # every server instance) is planned but needs daemon features that are not
-# implemented yet: start_command execution (DMN-018) and a copy-up overlay
+# implemented yet: start_command execution and a copy-up overlay
 # for the image's writable paths — the joedwards32/cs2 image manages its
 # game directory itself and cannot run from a read-only mount.
 # Schema: https://registry.adminservice.cloud/schema/asc.stack.schema.json

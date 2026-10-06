@@ -44,7 +44,7 @@ The original design — one "master" app keeping the game files in a shared
 named volume mounted read-only by every server instance (no per-instance
 ~60 GB download) — is on hold until the daemon implements:
 
-- `start_command` execution from `asc.settings.yaml` (DMN-018), which the
+- `start_command` execution from `asc.settings.yaml`, which the
   master's SteamCMD run needs;
 - a copy-up overlay for the image's writable paths: the joedwards32/cs2
   entrypoint writes configs and scripts into its game directory, so a plain

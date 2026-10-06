@@ -2,7 +2,7 @@
 
 > 🌍 **Язык:** Русский · [🇬🇧 English version](../../README.md)
 
-Примеры приложений и манифестов `asc.yaml` для [asc-daemon](../../../asc-daemon): шаблоны для разработчиков, которые хотят упаковать своё приложение для магазина [AdminService.Cloud](../../../asc-platform) или кастомного реестра.
+Примеры приложений и манифестов `asc.yaml` для [asc-daemon](../../../asc-daemon): шаблоны для разработчиков, которые хотят упаковать своё приложение для магазина AdminService.Cloud или кастомного реестра.
 
 ## 📂 Что внутри
 
@@ -90,11 +90,9 @@ apps:
 
 Подробнее — в [📦 package-manager](../../../asc-daemon/docs/package-manager.md).
 
-## 📚 Документация и Roadmap
+## 📚 Документация
 
 - [📦 Формат asc.yaml и реестров](../../../asc-daemon/docs/package-manager.md)
-- [🛍️ Магазин приложений](../../../asc-platform/docs/features/app-store.md)
-- [🎯 ROADMAP](../../../asc-platform/ROADMAP.md) — задача примеров: `REG-002`
 
 > ⚠️ Каталог `old/` — прошлые наработки, используется как справка.
 

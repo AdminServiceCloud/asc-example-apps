@@ -14,7 +14,7 @@ asc app start redis
 
 ## 📖 What it demonstrates
 
-- **`start_command` (DMN-018)** as the way to configure an image that has no
+- **`start_command`** as the way to configure an image that has no
   env-based configuration at all: every setting (`password`, `append_only`,
   `maxmemory`, `maxmemory_policy`, `port`) is threaded into
   `redis-server --requirepass ${REDIS_PASSWORD} ...` via `${VAR}`
